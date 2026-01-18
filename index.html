@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>脳汁オリパ | 覚醒モード</title>
+<title>脳汁オリパ | 還元率特化版</title>
 <style>
   :root {
     --gold: #FFD700;
@@ -12,7 +12,6 @@
     --green: #2aff2a;
     --rainbow: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
     --bg-dark: #050505;
-    --card-bg: #1a1a1a;
   }
 
   body {
@@ -20,7 +19,7 @@
     background-color: var(--bg-dark);
     color: #fff;
     font-family: "Arial Black", sans-serif;
-    overflow-x: hidden;
+    overflow: hidden; 
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -30,7 +29,7 @@
 
   /* --- ヘッダー --- */
   header {
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
@@ -38,7 +37,10 @@
     border-bottom: 2px solid #333;
     z-index: 100;
     box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    height: 60px;
+    box-sizing: border-box;
   }
+  .header-title { font-style: italic; font-size: 18px; }
   .points-box {
     background: linear-gradient(to right, #222, #444);
     padding: 5px 15px;
@@ -50,89 +52,61 @@
     font-size: 14px;
   }
 
-  /* --- タブ切り替え --- */
-  .tier-tabs {
-    display: flex;
-    background: #111;
-    border-bottom: 1px solid #333;
-  }
-  .tier-tab {
-    flex: 1;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 14px;
-    color: #666;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: 0.3s;
-  }
-  .tier-tab.active {
-    color: #fff;
-    background: linear-gradient(to bottom, #222, #000);
-  }
-  .tier-tab.active[data-tier="500"] { border-bottom-color: var(--blue); text-shadow: 0 0 5px var(--blue); }
-  .tier-tab.active[data-tier="1000"] { border-bottom-color: var(--green); text-shadow: 0 0 5px var(--green); }
-  .tier-tab.active[data-tier="2000"] { border-bottom-color: var(--gold); text-shadow: 0 0 5px var(--gold); }
-
-  /* --- メインエリア --- */
+  /* --- メインエリア（縦スクロール） --- */
   .main-stage {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
     overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 100px;
     background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+  }
+
+  /* ガチャの箱 */
+  .gacha-box {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
 
   .banner {
     width: 100%;
-    max-width: 400px;
-    height: 180px;
+    height: 150px;
     background: #000;
-    margin-bottom: 20px;
-    border-radius: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
     border: 2px solid #444;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
     position: relative;
     overflow: hidden;
     background-size: cover;
     background-position: center;
   }
   .banner-text {
-    font-size: 32px;
-    font-weight: 900;
-    z-index: 2;
+    font-size: 28px; font-weight: 900; z-index: 2;
     text-shadow: 0 4px 10px rgba(0,0,0,0.8);
   }
   .banner-sub {
-    font-size: 14px;
-    color: #ddd;
-    z-index: 2;
-    background: rgba(0,0,0,0.6);
-    padding: 2px 10px;
-    border-radius: 4px;
-    margin-top: 5px;
+    font-size: 12px; color: #ddd; z-index: 2;
+    background: rgba(0,0,0,0.6); padding: 2px 8px;
+    border-radius: 4px; margin-top: 5px;
   }
 
   /* ボタン群 */
   .gacha-controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 40px;
+    gap: 10px;
   }
   .gacha-btn {
     border: none;
-    padding: 15px 0;
-    font-size: 14px;
+    padding: 12px 0;
+    font-size: 13px;
     font-weight: 900;
     color: white;
     border-radius: 8px;
@@ -160,7 +134,7 @@
     background: linear-gradient(180deg, #e9b443 0%, #a8822e 100%);
     box-shadow: 0 4px 0 #685015;
   }
-  .cost-label { font-size: 11px; margin-top: 2px; opacity: 0.9; font-weight: normal; }
+  .cost-label { font-size: 10px; margin-top: 2px; opacity: 0.9; font-weight: normal; }
 
   /* --- フッターメニュー --- */
   .footer-menu {
@@ -169,8 +143,10 @@
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
-    position: sticky; bottom: 0;
+    position: fixed; bottom: 0; left: 0; width: 100%;
     z-index: 900;
+    height: 60px;
+    box-sizing: border-box;
   }
   .menu-item {
     color: #888;
@@ -179,7 +155,7 @@
     cursor: pointer;
     width: 50%;
   }
-  .menu-item.active { color: var(--gold); }
+  .menu-item:active { opacity: 0.7; }
   .menu-icon { font-size: 20px; display: block; margin-bottom: 2px; }
 
   /* --- 演出オーバーレイ (パチンコパート) --- */
@@ -244,9 +220,17 @@
   
   .screen-header {
     text-align: center; margin-bottom: 10px;
-    font-size: 20px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px;
+    font-size: 18px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center;
+    height: 40px;
   }
+  
+  .back-btn {
+    background: none; border: 1px solid #666; color: #ddd;
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .back-btn:hover { background: #333; color: #fff; border-color: #fff; }
 
   .scroll-area {
     flex: 1; overflow-y: auto; padding-bottom: 80px;
@@ -326,45 +310,15 @@
 <body>
 
 <header>
-  <div style="font-style:italic;">脳汁ORIPA</div>
-  <div class="points-box" id="headerPoints">10,000 pt</div>
+  <div class="header-title">脳汁ORIPA</div>
+  <div class="points-box" id="headerPoints">999,999,999 pt</div>
 </header>
 
-<div class="tier-tabs">
-  <div class="tier-tab active" onclick="switchTier(500)" data-tier="500">500円<br>ノーマル</div>
-  <div class="tier-tab" onclick="switchTier(1000)" data-tier="1000">1,000円<br>レア</div>
-  <div class="tier-tab" onclick="switchTier(2000)" data-tier="2000">2,000円<br>超激熱</div>
-</div>
-
-<div class="main-stage">
-  <div class="banner" id="tierBanner">
-    <div class="banner-text" id="bannerTitle">BEGINNER</div>
-    <div class="banner-sub" id="bannerSub">SSR確率 1%</div>
+<div class="main-stage" id="gachaContainer">
   </div>
-  
-  <div class="gacha-controls">
-    <button class="gacha-btn btn-single" onclick="tryGacha(1)">
-      単発ガチャ
-      <span class="cost-label" id="cost1">500 pt</span>
-    </button>
-    <button class="gacha-btn btn-10" onclick="tryGacha(10)">
-      10連ガチャ
-      <span class="cost-label" id="cost10">5,000 pt</span>
-    </button>
-    <button class="gacha-btn btn-100" onclick="tryGacha(100)">
-      100連ガチャ
-      <span class="cost-label" id="cost100">50,000 pt</span>
-    </button>
-  </div>
-  
-  <div style="color:#666; font-size:12px; text-align:center;">
-    ※確率は演出上のものです。<br>
-    ※実在のカードとは関係ありません。
-  </div>
-</div>
 
 <div class="footer-menu">
-  <div class="menu-item active" onclick="showMain()">
+  <div class="menu-item" onclick="showMain()">
     <span class="menu-icon">🏠</span>ガチャ
   </div>
   <div class="menu-item" onclick="openInventory()">
@@ -382,7 +336,7 @@
 <div class="overlay-screen" id="resultScreen">
   <div class="screen-header">
     <span>RESULT</span>
-    <button onclick="closeResult()" style="background:none; border:1px solid #fff; color:#fff; padding:5px 10px; border-radius:4px;">閉じる</button>
+    <button class="back-btn" onclick="closeResult()">× 閉じる</button>
   </div>
   <div class="scroll-area">
     <div class="card-grid" id="resultGrid"></div>
@@ -391,18 +345,18 @@
 
 <div class="overlay-screen" id="inventoryScreen">
   <div class="screen-header">
+    <button class="back-btn" onclick="showMain()">← 戻る</button>
     <span>所有カード</span>
-    <span style="font-size:12px; color:#aaa;">タップで選択</span>
-  </div>
+    <div style="width:50px;"></div> </div>
   <div class="scroll-area">
     <div class="card-grid" id="inventoryGrid"></div>
   </div>
   <div class="action-bar">
-    <div style="color:#fff; font-size:14px;">
+    <div style="color:#fff; font-size:12px;">
       選択中: <span id="sellCount">0</span>枚<br>
       売却額: <span id="sellValue" style="color:var(--gold); font-size:16px;">0</span> pt
     </div>
-    <button class="sell-btn" id="sellBtn" onclick="sellSelectedCards()" disabled>売却する</button>
+    <button class="sell-btn" id="sellBtn" onclick="sellSelectedCards()" disabled>まとめて売却</button>
   </div>
 </div>
 
@@ -410,69 +364,103 @@
 
 <script>
   // --- 設定データ ---
-  let userPoints = 10000;
-  let currentTier = 500;
-  let myCards = []; // 所有カード {id, tier, name, rarity, point, img, uniqueId}
+  let userPoints = 999999999; // テスト用無限ポイント
+  let myCards = []; 
 
-  // ティアごとの排出設定
-  const TIERS = {
-    500: {
-      name: "BEGINNER", sub: "SSR確率 1%",
+  // ★ 還元率設計（期待値92-96% / 最低保証80-90%）
+  const TIERS = [
+    {
+      price: 500,
+      name: "BEGINNER", 
+      sub: "最低保証400pt (80%) 安心設計",
       colors: ["#333", "#555"],
       pool: [
-        { r:"SSR", w:1, pt:10000, name:"青眼の巨神" },
-        { r:"SR", w:5, pt:2000, name:"見習い魔導師" },
-        { r:"R", w:30, pt:300, name:"戦士の剣" },
-        { r:"C", w:64, pt:50, name:"ただの石" }
+        // SSR: 0.5% (還元率 4000%)
+        { r:"SSR", w:0.5, pt:20000, name:"青眼の巨神" },
+        // SR: 3% (還元率 600%)
+        { r:"SR", w:3, pt:3000, name:"見習い魔導師" },
+        // R: 20% (還元率 110%)
+        { r:"R", w:20, pt:550, name:"戦士の剣" },
+        // C: 76.5% (還元率 80-90%)
+        { r:"C", w:76.5, pt:420, name:"ただの石" }
       ]
     },
-    1000: {
-      name: "STANDARD", sub: "SSR確率 5%",
+    {
+      price: 1000,
+      name: "STANDARD", 
+      sub: "期待値94% / ハイリスクハイリターン",
       colors: ["#004400", "#002200"],
       pool: [
-        { r:"SSR", w:5, pt:30000, name:"紅蓮の竜王" },
-        { r:"SR", w:15, pt:4000, name:"エルフの剣士" },
-        { r:"R", w:40, pt:500, name:"魔法の壺" },
-        { r:"C", w:40, pt:100, name:"ゴブリン" }
+        // SSR: 1% (還元率 5000%)
+        { r:"SSR", w:1, pt:50000, name:"紅蓮の竜王" },
+        // SR: 5% (還元率 500%)
+        { r:"SR", w:5, pt:5000, name:"エルフの剣士" },
+        // R: 20% (還元率 110%)
+        { r:"R", w:20, pt:1100, name:"魔法の壺" },
+        // C: 74% (還元率 85%)
+        { r:"C", w:74, pt:850, name:"ゴブリン" }
       ]
     },
-    2000: {
-      name: "ULTIMATE", sub: "SSR確率 10% / 爆死注意",
+    {
+      price: 2000,
+      name: "ULTIMATE", 
+      sub: "一撃必殺 / 天国か地獄か",
       colors: ["#440000", "#220000"],
       pool: [
-        { r:"SSR", w:10, pt:100000, name:"光の創造神" },
-        { r:"SR", w:20, pt:8000, name:"暗黒騎士" },
-        { r:"R", w:30, pt:1000, name:"蘇生魔法" },
-        { r:"C", w:40, pt:200, name:"スライム" }
+        // SSR: 1.5% (還元率 7500%)
+        { r:"SSR", w:1.5, pt:150000, name:"光の創造神" },
+        // SR: 8% (還元率 500%)
+        { r:"SR", w:8, pt:10000, name:"暗黒騎士" },
+        // R: 25% (還元率 105%)
+        { r:"R", w:25, pt:2100, name:"蘇生魔法" },
+        // C: 65.5% (還元率 80%)
+        { r:"C", w:65.5, pt:1600, name:"スライム" }
       ]
     }
-  };
+  ];
 
   // --- 初期化 ---
   updateUI();
+  renderGachaList();
 
-  // --- ティア切り替え ---
-  function switchTier(price) {
-    currentTier = price;
-    
-    // タブのアクティブ化
-    document.querySelectorAll('.tier-tab').forEach(el => {
-      el.classList.remove('active');
-      if(parseInt(el.dataset.tier) === price) el.classList.add('active');
+  // --- 画面描画 ---
+  function renderGachaList() {
+    const container = document.getElementById('gachaContainer');
+    container.innerHTML = "";
+
+    TIERS.forEach(tier => {
+      const box = document.createElement('div');
+      box.className = 'gacha-box';
+      
+      const banner = document.createElement('div');
+      banner.className = 'banner';
+      banner.style.backgroundImage = `linear-gradient(45deg, ${tier.colors[0]}, ${tier.colors[1]})`;
+      banner.innerHTML = `
+        <div class="banner-text">${tier.name}</div>
+        <div class="banner-sub">${tier.sub}</div>
+      `;
+
+      const controls = document.createElement('div');
+      controls.className = 'gacha-controls';
+      controls.innerHTML = `
+        <button class="gacha-btn btn-single" onclick="tryGacha(${tier.price}, 1)">
+          単発ガチャ
+          <span class="cost-label">${tier.price.toLocaleString()} pt</span>
+        </button>
+        <button class="gacha-btn btn-10" onclick="tryGacha(${tier.price}, 10)">
+          10連ガチャ
+          <span class="cost-label">${(tier.price * 10).toLocaleString()} pt</span>
+        </button>
+        <button class="gacha-btn btn-100" onclick="tryGacha(${tier.price}, 100)">
+          100連ガチャ
+          <span class="cost-label">${(tier.price * 100).toLocaleString()} pt</span>
+        </button>
+      `;
+
+      box.appendChild(banner);
+      box.appendChild(controls);
+      container.appendChild(box);
     });
-
-    // バナーとボタン表示更新
-    const info = TIERS[price];
-    const banner = document.getElementById('tierBanner');
-    document.getElementById('bannerTitle').innerText = info.name;
-    document.getElementById('bannerSub').innerText = info.sub;
-    
-    // 背景色変更（雰囲気づくり）
-    banner.style.backgroundImage = `linear-gradient(45deg, ${info.colors[0]}, ${info.colors[1]})`;
-
-    document.getElementById('cost1').innerText = `${price.toLocaleString()} pt`;
-    document.getElementById('cost10').innerText = `${(price*10).toLocaleString()} pt`;
-    document.getElementById('cost100').innerText = `${(price*100).toLocaleString()} pt`;
   }
 
   function updateUI() {
@@ -484,18 +472,19 @@
   let maxRarityVal = 0; // 演出用
   let currentAura = 0;
 
-  function tryGacha(count) {
-    const cost = currentTier * count;
-    if (userPoints < cost) {
-      alert("ポイントが足りません！");
-      return;
-    }
-    userPoints -= cost;
+  function tryGacha(price, count) {
+    const cost = price * count;
+    // テストモードなのでポイント減算はコメントアウト
+    // if (userPoints < cost) { alert("ポイントが足りません！"); return; }
+    // userPoints -= cost; 
+    
     updateUI();
 
     tempResults = [];
     maxRarityVal = 0;
-    const pool = TIERS[currentTier].pool;
+    
+    const targetTier = TIERS.find(t => t.price === price);
+    const pool = targetTier.pool;
     const totalW = pool.reduce((a,c)=>a+c.w, 0);
 
     for(let i=0; i<count; i++){
@@ -506,15 +495,13 @@
         if(r < 0) { selected = card; break; }
       }
       
-      // 画像URL生成 (それっぽく見せる)
       const color = selected.r === 'SSR' ? '000000' : (selected.r === 'SR' ? 'aa8800' : '555555');
       const text = selected.r === 'SSR' ? 'GOD' : selected.r;
       const imgUrl = `https://placehold.jp/30/${color}/ffffff/150x225.png?text=${encodeURIComponent(text)}%0A${encodeURIComponent(selected.name)}`;
 
-      // 獲得カードオブジェクト
       const newCard = {
-        uniqueId: Date.now() + Math.random(), // 売却識別用
-        tier: currentTier,
+        uniqueId: Date.now() + Math.random(), 
+        tier: price,
         rarity: selected.r,
         name: selected.name,
         point: selected.pt,
@@ -523,7 +510,6 @@
       
       tempResults.push(newCard);
       
-      // 演出用最大値計算
       let v = 0;
       if(selected.r==='R') v=1;
       if(selected.r==='SR') v=2;
@@ -543,7 +529,6 @@
     updateAura();
     
     document.getElementById('pushBtn').onclick = () => {
-      // 昇格抽選
       const orb = document.getElementById('auraOrb');
       orb.style.animation = 'none';
       orb.offsetHeight; 
@@ -556,7 +541,6 @@
         }
       }
       
-      // 終了判定
       if (currentAura === 3 || Math.random() < 0.15) {
         finishAnimation();
       }
@@ -575,7 +559,6 @@
   function finishAnimation() {
     document.getElementById('pushBtn').onclick = null;
     
-    // 逆転演出（色が足りない場合合わせる）
     if(currentAura < maxRarityVal) {
       currentAura = maxRarityVal;
       updateAura();
@@ -610,7 +593,6 @@
     grid.innerHTML = "";
     
     tempResults.forEach((card, i) => {
-      // 在庫に追加
       myCards.push(card);
 
       const el = document.createElement('div');
@@ -642,7 +624,7 @@
   // --- インベントリ & 売却 ---
   
   function showMain() {
-    document.getElementById('inventoryScreen').style.display = 'none';
+    document.querySelectorAll('.overlay-screen').forEach(el => el.style.display = 'none');
   }
 
   let selectedCards = new Set();
@@ -663,7 +645,6 @@
       return;
     }
 
-    // 新しい順に表示
     [...myCards].reverse().forEach(card => {
       const el = document.createElement('div');
       el.className = `grid-card ${card.rarity}`;
@@ -675,7 +656,6 @@
         </div>
       `;
       
-      // クリックで選択/解除
       el.onclick = () => {
         if(selectedCards.has(card.uniqueId)) {
           selectedCards.delete(card.uniqueId);
@@ -710,19 +690,16 @@
     if(!confirm(`${selectedCards.size}枚のカードを売却しますか？`)) return;
 
     let sellTotal = 0;
-    // 売却対象のポイント集計と削除
     myCards = myCards.filter(c => {
       if(selectedCards.has(c.uniqueId)) {
         sellTotal += c.point;
-        return false; // リストから除外
+        return false; 
       }
-      return true; // 残す
+      return true;
     });
 
     userPoints += sellTotal;
     updateUI();
-    
-    // UI更新
     renderInventory();
     alert(`${sellTotal.toLocaleString()} pt 獲得しました！`);
   }
