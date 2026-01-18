@@ -2,444 +2,521 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>脳汁オリパ | 激アツ演出Ver</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>脳汁オリパ | 覚醒モード</title>
 <style>
   :root {
     --gold: #FFD700;
-    --rainbow: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-    --bg-dark: #0a0a0a;
+    --red: #ff2a2a;
+    --blue: #2a2aff;
+    --green: #2aff2a;
+    --rainbow: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    --bg-dark: #050505;
   }
 
   body {
     margin: 0;
     background-color: var(--bg-dark);
     color: #fff;
-    font-family: sans-serif;
+    font-family: "Arial Black", sans-serif;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    user-select: none; /* 連打時の選択防止 */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* ★ ヘッダー（ポイント表示） */
+  /* --- ヘッダー --- */
   header {
-    background: rgba(0,0,0,0.8);
-    padding: 10px 20px;
+    background: rgba(0,0,0,0.9);
+    padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #333;
+    border-bottom: 2px solid #333;
     position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
   }
   .points-box {
-    background: #222;
+    background: linear-gradient(to right, #222, #444);
     padding: 5px 15px;
     border-radius: 20px;
-    border: 1px solid var(--gold);
+    border: 2px solid var(--gold);
     color: var(--gold);
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    text-shadow: 0 0 5px var(--gold);
   }
 
-  /* ★ メインエリア */
+  /* --- メインエリア --- */
   .main-stage {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 20px;
-    position: relative;
+    padding-bottom: 100px;
+    background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
   }
 
-  /* ガチャ筐体画像（CSSで表現） */
-  .gacha-machine {
-    width: 280px;
-    height: 400px;
+  .banner {
+    width: 100%;
+    max-width: 400px;
+    height: 150px;
     background: #111;
-    border: 2px solid #444;
+    margin-bottom: 30px;
     border-radius: 10px;
-    position: relative;
+    border: 2px solid var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
-    background-image: url('https://placehold.jp/3d4070/ffffff/300x400.png?text=TAP%20TO%20PULL');
-    background-size: cover;
-    transition: transform 0.1s;
-  }
-
-  /* ボタン */
-  .pull-btn {
-    margin-top: 30px;
-    background: linear-gradient(180deg, #ff6b6b, #c0392b);
-    border: none;
-    padding: 15px 60px;
-    color: white;
     font-size: 24px;
-    font-weight: 900;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #96281b, 0 10px 20px rgba(255,0,0,0.4);
-    transition: all 0.1s;
+    color: var(--gold);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
     position: relative;
     overflow: hidden;
   }
-  .pull-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 #96281b;
-  }
-  .pull-btn::after { /* キラリと光る線 */
-    content: "";
-    position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-    transform: rotate(30deg);
-    animation: shine 3s infinite;
+  .banner::after {
+    content: "激熱還元祭";
+    font-size: 30px;
+    font-weight: 900;
+    text-shadow: 0 0 10px red;
+    animation: pulse 1s infinite alternate;
   }
 
-  @keyframes shine {
-    0% { left: -100%; }
-    20% { left: 100%; }
-    100% { left: 100%; }
+  /* ボタン群 */
+  .gacha-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
   }
+  .gacha-btn {
+    border: none;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: 900;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+  }
+  .gacha-btn:active { transform: scale(0.95); }
+  
+  .btn-single {
+    background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+    box-shadow: 0 4px 0 #0099aa, 0 10px 10px rgba(0,255,255,0.3);
+    grid-column: 1 / 3;
+  }
+  .btn-10 {
+    background: linear-gradient(180deg, #43e97b 0%, #38f9d7 100%);
+    box-shadow: 0 4px 0 #2ea868, 0 10px 10px rgba(0,255,0,0.3);
+  }
+  .btn-100 {
+    background: linear-gradient(180deg, #fa709a 0%, #fee140 100%);
+    box-shadow: 0 4px 0 #c75618, 0 10px 10px rgba(255,100,0,0.3);
+  }
+  .cost-label { font-size: 10px; display: block; margin-top: 4px; opacity: 0.9; }
 
-  /* ★ 演出レイヤー（最初は非表示） */
-  .effect-overlay {
+  /* --- 演出オーバーレイ (パチンコパート) --- */
+  .cutin-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 999;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  /* カード本体（裏面・表面） */
-  .card-container {
-    width: 260px;
-    height: 360px;
-    perspective: 1000px;
+  /* オーラ（保留） */
+  .aura-orb {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, var(--blue));
+    box-shadow: 0 0 60px var(--blue);
+    margin-bottom: 50px;
     position: relative;
+    transition: all 0.3s ease;
+    animation: float 2s ease-in-out infinite;
   }
-  .card-inner {
-    width: 100%; height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  .card-face {
-    position: absolute; width: 100%; height: 100%;
-    backface-visibility: hidden;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
-  
-  /* 裏面デザイン */
-  .card-back {
-    background: #222;
-    border: 2px solid #555;
-    background-image: repeating-linear-gradient(45deg, #222 0, #222 10px, #2a2a2a 10px, #2a2a2a 20px);
-  }
-  .card-back::before {
-    content: "ORIPA";
-    color: #444; font-size: 30px; font-weight: 900;
-    transform: rotate(-45deg);
+  .aura-orb.blue { background: radial-gradient(circle, #fff, var(--blue)); box-shadow: 0 0 60px var(--blue); }
+  .aura-orb.green { background: radial-gradient(circle, #fff, var(--green)); box-shadow: 0 0 60px var(--green); }
+  .aura-orb.red { background: radial-gradient(circle, #fff, var(--red)); box-shadow: 0 0 80px var(--red); animation: shake-hard 0.2s infinite; }
+  .aura-orb.rainbow { 
+    background: var(--rainbow); 
+    box-shadow: 0 0 100px #ff00de; 
+    animation: spin 1s linear infinite;
   }
 
-  /* 表面デザイン */
-  .card-front {
-    background: #000;
-    transform: rotateY(180deg);
-    overflow: hidden;
+  /* PUSHボタン */
+  .push-btn {
+    width: 120px; height: 120px;
+    border-radius: 50%;
     border: 4px solid #fff;
+    background: radial-gradient(circle, #ff0000 0%, #880000 100%);
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
+    animation: pulse-btn 0.5s infinite alternate;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2001;
   }
-  .card-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-  .rarity-badge {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(0,0,0,0.8);
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-weight: bold;
-    border: 1px solid #fff;
-    z-index: 2;
-  }
+  .push-btn:active { transform: scale(0.9); }
 
-  /* ★ アニメーション定義 */
+  /* 文字カットイン */
+  .cutin-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 80px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 20px red;
+    white-space: nowrap;
+    z-index: 3000;
+    pointer-events: none;
+  }
+  .cutin-anim { animation: cutin-show 0.6s ease-out forwards; }
+
+  /* --- 結果表示エリア --- */
+  .result-grid-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #111;
+    z-index: 1500;
+    display: none;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
   
-  /* 1. ガタガタ震える */
-  .shake-hard {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
-  }
-  @keyframes shake {
-    10%, 90% { transform: translate3d(-2px, 0, 0) rotate(-1deg); }
-    20%, 80% { transform: translate3d(4px, 0, 0) rotate(2deg); }
-    30%, 50%, 70% { transform: translate3d(-8px, 0, 0) rotate(-4deg); }
-    40%, 60% { transform: translate3d(8px, 0, 0) rotate(4deg); }
-  }
-
-  /* 2. 発光 */
-  .glowing {
-    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
-    transition: box-shadow 0.5s;
+  .result-header { text-align: center; margin-bottom: 20px; font-size: 24px; color: #fff; }
+  
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  /* 3. 虹色背景（SSR用） */
-  .rainbow-bg {
-    background: var(--rainbow);
-    background-size: 400% 400%;
-    animation: rainbow-move 2s ease infinite;
+  .grid-card {
+    aspect-ratio: 2/3;
+    background: #222;
+    border-radius: 6px;
+    border: 1px solid #444;
+    position: relative;
+    overflow: hidden;
+    animation: card-appear 0.3s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.8);
   }
-  @keyframes rainbow-move { 
-    0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+  
+  /* レアリティ別のカード装飾 */
+  .grid-card.SSR { border: 2px solid var(--gold); box-shadow: 0 0 15px var(--gold); }
+  .grid-card.SR { border: 1px solid #ffaa00; box-shadow: 0 0 5px #ffaa00; }
+  .grid-card.R { border: 1px solid #aaa; }
+  .grid-card.C { opacity: 0.7; }
+
+  .grid-card img { width: 100%; height: 100%; object-fit: cover; }
+  .grid-card .info {
+    position: absolute; bottom: 0; width: 100%;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    font-size: 8px;
+    text-align: center;
+    padding: 2px 0;
   }
 
-  /* 4. ホワイトアウト（画面真っ白） */
+  .close-result-btn {
+    margin: 30px auto;
+    padding: 15px 40px;
+    background: #333;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* --- ホワイトアウト --- */
   .flash-bang {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: white;
-    z-index: 10000;
+    z-index: 5000;
     opacity: 0;
     pointer-events: none;
   }
-  .flash-active {
-    animation: flash 0.8s ease-out forwards;
-  }
-  @keyframes flash {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
-  }
+  .flash-active { animation: flash 0.5s ease-out forwards; }
 
-  /* 結果表示後のボタン */
-  .result-actions {
-    margin-top: 30px;
-    display: none; /* 最初は隠す */
-    gap: 15px;
-    z-index: 1001;
+  /* --- アニメーション --- */
+  @keyframes pulse { to { transform: scale(1.05); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+  @keyframes shake-hard { 0% { transform: translate(2px, 2px) rotate(0deg); } 100% { transform: translate(-2px, -2px) rotate(-1deg); } }
+  @keyframes spin { 0% { transform: rotate(0deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1.1); } }
+  @keyframes pulse-btn { 0% { transform: scale(1); box-shadow: 0 0 20px red; } 100% { transform: scale(1.1); box-shadow: 0 0 50px red; } }
+  @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes cutin-show { 
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 0; } 
+    50% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
   }
-  .action-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 1px solid #fff;
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .primary-btn {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-  }
-
-  /* 紙吹雪 */
-  .confetti {
-    position: absolute;
-    width: 10px; height: 10px;
-    background-color: #ffd700;
-    animation: fall linear forwards;
-  }
-  @keyframes fall {
-    to { transform: translateY(100vh) rotate(720deg); }
-  }
+  @keyframes card-appear { to { opacity: 1; transform: scale(1); } }
 
 </style>
 </head>
 <body>
 
 <header>
-  <div>TCG ORIPA</div>
-  <div class="points-box">10,000 pt</div>
+  <div style="font-style:italic;">激熱オリパ</div>
+  <div class="points-box" id="currentPointDisplay">10,000 pt</div>
 </header>
 
 <div class="main-stage">
-  <div class="gacha-machine" id="machine"></div>
+  <div class="banner"></div>
   
-  <div style="margin-top:10px; font-size:12px; color:#aaa;">1回 500pt</div>
+  <div class="gacha-controls">
+    <button class="gacha-btn btn-single" onclick="startGacha(1)">
+      単発ガチャ
+      <span class="cost-label">500 pt</span>
+    </button>
+    <button class="gacha-btn btn-10" onclick="startGacha(10)">
+      10連ガチャ
+      <span class="cost-label">5,000 pt</span>
+    </button>
+    <button class="gacha-btn btn-100" onclick="startGacha(100)">
+      100連ガチャ
+      <span class="cost-label">50,000 pt</span>
+    </button>
+  </div>
   
-  <button class="pull-btn" id="pullBtn" onclick="startGacha()">PULL !</button>
+  <div style="margin-top:20px; color:#888; font-size:12px;">
+    SSR確率: 2% / SR確率: 8%<br>
+    ※演出は実際の確率と異なる場合があります(笑)
+  </div>
 </div>
 
-<div class="effect-overlay" id="overlay">
-  
-  <div class="card-container">
-    <div class="card-inner" id="cardInner">
-      
-      <div class="card-face card-back" id="cardBack"></div>
-      
-      <div class="card-face card-front" id="cardFront">
-        <div class="rarity-badge" id="resRarity">SSR</div>
-        <img src="" id="resImg" class="card-img" />
-        <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.7); padding:10px; text-align:center;">
-          <div id="resName" style="font-size:14px; font-weight:bold;"></div>
-          <div id="resPoint" style="font-size:18px; color:var(--gold); font-weight:900;"></div>
-        </div>
-      </div>
+<div class="cutin-overlay" id="cutinOverlay">
+  <div style="color:#fff; margin-bottom:20px; font-weight:bold; letter-spacing:2px;">TAP TO CHARGE!</div>
+  <div class="aura-orb blue" id="auraOrb"></div>
+  <div class="push-btn" id="pushBtn">PUSH</div>
+  <div class="cutin-text" id="cutinText">激熱!!</div>
+</div>
 
-    </div>
-  </div>
-
-  <div class="result-actions" id="resultActions">
-    <button class="action-btn" onclick="closeOverlay()">閉じる</button>
-    <button class="action-btn primary-btn" onclick="retryGacha()">もう一回 (500pt)</button>
-  </div>
-
+<div class="result-grid-overlay" id="resultGridOverlay">
+  <div class="result-header">RESULT</div>
+  <div class="card-grid" id="cardGrid"></div>
+  <button class="close-result-btn" onclick="closeResult()">閉じる</button>
 </div>
 
 <div class="flash-bang" id="flashBang"></div>
 
 <script>
-  // ★ カードデータ（確率はここで調整）
-  const CARD_DATA = [
-    { id: 1, name: "伝説のドラゴン [神]", rarity: "SSR", probability: 2, point: 50000, img: "https://placehold.jp/30/000000/ffffff/260x360.png?text=SSR%20DRAGON" },
-    { id: 2, name: "美少女トレーナー [金]", rarity: "SR", probability: 10, point: 5000, img: "https://placehold.jp/30/aa8800/ffffff/260x360.png?text=SR%20GIRL" },
-    { id: 3, name: "汎用サポート [銀]", rarity: "R", probability: 30, point: 1000, img: "https://placehold.jp/30/555555/ffffff/260x360.png?text=R%20SUPPORT" },
-    { id: 4, name: "ノーマルカードA", rarity: "C", probability: 58, point: 100, img: "https://placehold.jp/30/333333/aaaaaa/260x360.png?text=Normal" }
+  // --- データ設定 ---
+  const CARD_TYPES = [
+    { id: 1, name: "覇王龍 [神]", rarity: "SSR", weight: 2, point: 50000, color: "var(--rainbow)", img: "https://placehold.jp/30/000000/ffffff/100x150.png?text=SSR" },
+    { id: 2, name: "天才魔術師", rarity: "SR", weight: 8, point: 5000, color: "#ffaa00", img: "https://placehold.jp/30/aa8800/ffffff/100x150.png?text=SR" },
+    { id: 3, name: "エルフの戦士", rarity: "R", weight: 30, point: 1000, color: "#silver", img: "https://placehold.jp/30/555555/ffffff/100x150.png?text=R" },
+    { id: 4, name: "ゴブリンA", rarity: "C", weight: 60, point: 100, color: "#444", img: "https://placehold.jp/30/333333/aaaaaa/100x150.png?text=C" }
   ];
 
-  let currentPoints = 10000;
-  const COST = 500;
+  let currentPoints = 100000; // テスト用に多めに
+  const COST_PER_PULL = 500;
+  
+  // 状態管理
+  let currentResults = [];
+  let currentMaxRarityVal = 0; // 0:C, 1:R, 2:SR, 3:SSR
+  let currentAuraLevel = 0; // 0:青, 1:緑, 2:赤, 3:虹
+  
+  // 初期表示
+  updatePointDisplay();
 
-  // ガチャ抽選ロジック
-  function drawCard() {
-    const rand = Math.random() * 100;
-    let accumulated = 0;
-    for (const card of CARD_DATA) {
-      accumulated += card.probability;
-      if (rand < accumulated) {
-        return card;
-      }
-    }
-    return CARD_DATA[CARD_DATA.length - 1];
+  function updatePointDisplay() {
+    document.getElementById('currentPointDisplay').innerText = currentPoints.toLocaleString() + " pt";
   }
 
-  // ★ 演出開始
-  function startGacha() {
-    if (currentPoints < COST) {
+  // --- ガチャ抽選ロジック ---
+  function drawOne() {
+    const totalWeight = CARD_TYPES.reduce((sum, c) => sum + c.weight, 0);
+    const r = Math.random() * totalWeight;
+    let s = 0;
+    for (const c of CARD_TYPES) {
+      s += c.weight;
+      if (r < s) return c;
+    }
+    return CARD_TYPES[CARD_TYPES.length - 1];
+  }
+
+  function startGacha(count) {
+    const totalCost = count * COST_PER_PULL;
+    if (currentPoints < totalCost) {
       alert("ポイントが足りません！");
       return;
     }
     
-    // ポイント消費
-    currentPoints -= COST;
-    document.querySelector('.points-box').innerText = currentPoints.toLocaleString() + " pt";
+    currentPoints -= totalCost;
+    updatePointDisplay();
 
-    const result = drawCard();
-    playAnimation(result);
+    // 抽選実行
+    currentResults = [];
+    currentMaxRarityVal = 0;
+    for (let i = 0; i < count; i++) {
+      const card = drawOne();
+      currentResults.push(card);
+      // 最大レアリティ判定用数値
+      let rVal = 0;
+      if (card.rarity === 'R') rVal = 1;
+      if (card.rarity === 'SR') rVal = 2;
+      if (card.rarity === 'SSR') rVal = 3;
+      if (rVal > currentMaxRarityVal) currentMaxRarityVal = rVal;
+    }
+
+    // 演出開始
+    startAnimationSequence();
   }
 
-  // ★ 脳汁演出フロー
-  async function playAnimation(card) {
-    const overlay = document.getElementById('overlay');
-    const cardBack = document.getElementById('cardBack');
-    const cardInner = document.getElementById('cardInner');
-    const flashBang = document.getElementById('flashBang');
-    const actions = document.getElementById('resultActions');
+  // --- 演出シーケンス ---
+  function startAnimationSequence() {
+    const overlay = document.getElementById('cutinOverlay');
+    const orb = document.getElementById('auraOrb');
+    const pushBtn = document.getElementById('pushBtn');
     
-    // 1. 初期化
     overlay.style.display = 'flex';
-    overlay.classList.remove('rainbow-bg');
-    actions.style.display = 'none';
-    cardInner.style.transform = 'rotateY(0deg)'; // 裏向きに戻す
-    cardBack.classList.remove('shake-hard', 'glowing');
+    document.getElementById('cutinText').style.display = 'none';
     
-    // 2. 溜め（振動）
-    // SSRなら振動時間を長くして期待感を煽る
-    const waitTime = card.rarity === 'SSR' ? 2500 : 1500;
-    
-    cardBack.classList.add('shake-hard');
-    
-    // 徐々に発光させる
-    setTimeout(() => {
-      cardBack.classList.add('glowing');
-    }, 500);
+    // オーラ初期化（ドキドキさせるために、最初は低めに設定して後で昇格させる）
+    // SSRが含まれていても、最初は青や緑からスタートさせる
+    currentAuraLevel = 0; 
+    updateAuraView();
 
-    // 3. ホワイトアウト＆確定
-    await new Promise(r => setTimeout(r, waitTime));
+    // PUSHボタンイベント設定
+    // 連打で色が昇格するかも？という演出
+    pushBtn.onclick = function() {
+      playPushEffect();
+    };
+  }
+
+  // PUSH時の演出（確率で色昇格）
+  function playPushEffect() {
+    const orb = document.getElementById('auraOrb');
     
-    flashBang.classList.add('flash-active');
-    
-    // フラッシュ中にデータをセット＆背景変更
-    setTimeout(() => {
-      setResultData(card);
-      
-      // SSRなら背景を虹色に
-      if (card.rarity === 'SSR') {
-        overlay.classList.add('rainbow-bg');
-        spawnConfetti(); // 紙吹雪発射
+    // 振動アニメーション再適用
+    orb.style.animation = 'none';
+    orb.offsetHeight; /* trigger reflow */
+    orb.style.animation = 'shake-hard 0.2s';
+
+    // 昇格ロジック（演出上の嘘も含む）
+    // 実際の最大レアリティより上には行かないように制御
+    if (currentAuraLevel < currentMaxRarityVal) {
+      // 30%の確率で昇格、またはSSR確定時は連打で上がりやすくする
+      if (Math.random() < 0.4 || currentMaxRarityVal === 3) {
+        currentAuraLevel++;
+        updateAuraView();
       }
-      
-      // カードをめくる
-      cardBack.classList.remove('shake-hard', 'glowing');
-      cardInner.style.transform = 'rotateY(180deg)';
-      
-      // ボタン表示
-      actions.style.display = 'flex';
-      
-    }, 400); // フラッシュが真っ白になったタイミングで切り替え
+    } else if (currentAuraLevel === currentMaxRarityVal && currentAuraLevel < 3) {
+        // すでに正解の色まで来ているが、フェイクで失敗音などを入れたいところ
+        // ここでは何もしない（上がらないドキドキ）
+    }
 
-    // フラッシュアニメーションのリセット
-    setTimeout(() => {
-      flashBang.classList.remove('flash-active');
-    }, 1000);
+    // 確定演出へ（ある程度連打させるか、ランダムで終了）
+    // ここでは単純化のため、虹になるか、または一定確率でフィニッシュ
+    if (currentAuraLevel === 3 || Math.random() < 0.15) {
+      finishAnimation();
+    }
   }
 
-  function setResultData(card) {
-    document.getElementById('resRarity').innerText = card.rarity;
-    document.getElementById('resName').innerText = card.name;
-    document.getElementById('resPoint').innerText = card.point.toLocaleString() + " pt還元";
-    
-    // SSRなら画像を豪華にする（ここではボーダー色変更で表現）
-    const front = document.getElementById('cardFront');
-    if (card.rarity === 'SSR') {
-      front.style.border = '4px solid gold';
-      front.style.boxShadow = '0 0 30px gold';
-      document.getElementById('resRarity').style.background = 'linear-gradient(45deg, gold, orange)';
-      document.getElementById('resRarity').style.color = 'black';
+  function updateAuraView() {
+    const orb = document.getElementById('auraOrb');
+    orb.className = 'aura-orb'; // reset
+    if (currentAuraLevel === 0) orb.classList.add('blue');
+    else if (currentAuraLevel === 1) orb.classList.add('green');
+    else if (currentAuraLevel === 2) orb.classList.add('red');
+    else if (currentAuraLevel >= 3) orb.classList.add('rainbow');
+  }
+
+  function finishAnimation() {
+    // ボタン無効化
+    document.getElementById('pushBtn').onclick = null;
+
+    // もし最終色が実際の結果より低い場合、逆転演出で色を合わせる（SSRなのに緑で止まってた場合など）
+    if (currentAuraLevel < currentMaxRarityVal) {
+      currentAuraLevel = currentMaxRarityVal;
+      updateAuraView(); // 最後に一気に変わる
+    }
+
+    // カットイン判定
+    if (currentMaxRarityVal === 3) {
+      showCutin("覚醒!!", () => showResultScreen());
+    } else if (currentMaxRarityVal === 2) {
+      showCutin("激熱!!", () => showResultScreen());
     } else {
-      front.style.border = '4px solid #fff';
-      front.style.boxShadow = 'none';
-      document.getElementById('resRarity').style.background = 'rgba(0,0,0,0.8)';
-      document.getElementById('resRarity').style.color = 'white';
+      // 通常遷移
+      showResultScreen();
     }
+  }
+
+  function showCutin(text, callback) {
+    const el = document.getElementById('cutinText');
+    el.innerText = text;
+    el.style.display = 'block';
+    el.classList.remove('cutin-anim');
+    el.offsetHeight; 
+    el.classList.add('cutin-anim');
     
-    // 画像セット (プレースホルダー)
-    document.getElementById('resImg').src = card.img;
+    // ホワイトアウト
+    setTimeout(() => {
+      document.getElementById('flashBang').classList.add('flash-active');
+      setTimeout(() => {
+        callback();
+        document.getElementById('flashBang').classList.remove('flash-active');
+        document.getElementById('cutinOverlay').style.display = 'none';
+      }, 300);
+    }, 800);
   }
 
-  function closeOverlay() {
-    document.getElementById('overlay').style.display = 'none';
-    // 紙吹雪を消す
-    document.querySelectorAll('.confetti').forEach(e => e.remove());
+  function showResultScreen() {
+    document.getElementById('cutinOverlay').style.display = 'none';
+    const gridOverlay = document.getElementById('resultGridOverlay');
+    const grid = document.getElementById('cardGrid');
+    grid.innerHTML = ""; // クリア
+
+    // カード生成（遅延表示）
+    currentResults.forEach((card, index) => {
+      const div = document.createElement('div');
+      div.className = `grid-card ${card.rarity}`;
+      div.style.animationDelay = `${index * 0.05}s`; // パラパラ表示
+      
+      div.innerHTML = `
+        <img src="${card.img}" alt="${card.name}">
+        <div class="info">
+          <span style="color:${getRarityColor(card.rarity)}">${card.rarity}</span><br>
+          ${card.point}pt
+        </div>
+      `;
+      grid.appendChild(div);
+    });
+
+    gridOverlay.style.display = 'flex';
   }
 
-  function retryGacha() {
-    closeOverlay();
-    setTimeout(startGacha, 100);
+  function getRarityColor(rarity) {
+    if (rarity === 'SSR') return 'gold';
+    if (rarity === 'SR') return 'orange';
+    if (rarity === 'R') return 'lightblue';
+    return 'white';
   }
 
-  // ★ 紙吹雪生成（SSR用）
-  function spawnConfetti() {
-    const overlay = document.getElementById('overlay');
-    for (let i = 0; i < 50; i++) {
-      const confetti = document.createElement('div');
-      confetti.classList.add('confetti');
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.top = -10 + 'px';
-      confetti.style.backgroundColor = ['#FFD700', '#FFF', '#FF0000'][Math.floor(Math.random() * 3)];
-      confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
-      overlay.appendChild(confetti);
-    }
+  function closeResult() {
+    document.getElementById('resultGridOverlay').style.display = 'none';
   }
 
 </script>
