@@ -12,6 +12,7 @@
     --green: #2aff2a;
     --rainbow: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
     --bg-dark: #050505;
+    --card-bg: #1a1a1a;
   }
 
   body {
@@ -22,7 +23,7 @@
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
@@ -35,7 +36,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #333;
-    position: sticky; top: 0; z-index: 100;
+    z-index: 100;
     box-shadow: 0 5px 20px rgba(0,0,0,0.8);
   }
   .points-box {
@@ -46,7 +47,32 @@
     color: var(--gold);
     font-weight: bold;
     text-shadow: 0 0 5px var(--gold);
+    font-size: 14px;
   }
+
+  /* --- タブ切り替え --- */
+  .tier-tabs {
+    display: flex;
+    background: #111;
+    border-bottom: 1px solid #333;
+  }
+  .tier-tab {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+  }
+  .tier-tab.active {
+    color: #fff;
+    background: linear-gradient(to bottom, #222, #000);
+  }
+  .tier-tab.active[data-tier="500"] { border-bottom-color: var(--blue); text-shadow: 0 0 5px var(--blue); }
+  .tier-tab.active[data-tier="1000"] { border-bottom-color: var(--green); text-shadow: 0 0 5px var(--green); }
+  .tier-tab.active[data-tier="2000"] { border-bottom-color: var(--gold); text-shadow: 0 0 5px var(--gold); }
 
   /* --- メインエリア --- */
   .main-stage {
@@ -56,33 +82,42 @@
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
-    padding-bottom: 100px;
+    overflow-y: auto;
     background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
   }
 
   .banner {
     width: 100%;
     max-width: 400px;
-    height: 150px;
-    background: #111;
-    margin-bottom: 30px;
+    height: 180px;
+    background: #000;
+    margin-bottom: 20px;
     border-radius: 10px;
-    border: 2px solid var(--gold);
+    border: 2px solid #444;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    color: var(--gold);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
     position: relative;
     overflow: hidden;
+    background-size: cover;
+    background-position: center;
   }
-  .banner::after {
-    content: "激熱還元祭";
-    font-size: 30px;
+  .banner-text {
+    font-size: 32px;
     font-weight: 900;
-    text-shadow: 0 0 10px red;
-    animation: pulse 1s infinite alternate;
+    z-index: 2;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+  }
+  .banner-sub {
+    font-size: 14px;
+    color: #ddd;
+    z-index: 2;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-top: 5px;
   }
 
   /* ボタン群 */
@@ -92,11 +127,12 @@
     gap: 15px;
     width: 100%;
     max-width: 400px;
+    margin-bottom: 40px;
   }
   .gacha-btn {
     border: none;
-    padding: 20px 0;
-    font-size: 16px;
+    padding: 15px 0;
+    font-size: 14px;
     font-weight: 900;
     color: white;
     border-radius: 8px;
@@ -105,28 +141,51 @@
     overflow: hidden;
     transition: transform 0.1s;
     text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .gacha-btn:active { transform: scale(0.95); }
   
   .btn-single {
-    background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
-    box-shadow: 0 4px 0 #0099aa, 0 10px 10px rgba(0,255,255,0.3);
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+    box-shadow: 0 4px 0 #222;
     grid-column: 1 / 3;
   }
   .btn-10 {
-    background: linear-gradient(180deg, #43e97b 0%, #38f9d7 100%);
-    box-shadow: 0 4px 0 #2ea868, 0 10px 10px rgba(0,255,0,0.3);
+    background: linear-gradient(180deg, #e94343 0%, #a82e2e 100%);
+    box-shadow: 0 4px 0 #681515;
   }
   .btn-100 {
-    background: linear-gradient(180deg, #fa709a 0%, #fee140 100%);
-    box-shadow: 0 4px 0 #c75618, 0 10px 10px rgba(255,100,0,0.3);
+    background: linear-gradient(180deg, #e9b443 0%, #a8822e 100%);
+    box-shadow: 0 4px 0 #685015;
   }
-  .cost-label { font-size: 10px; display: block; margin-top: 4px; opacity: 0.9; }
+  .cost-label { font-size: 11px; margin-top: 2px; opacity: 0.9; font-weight: normal; }
+
+  /* --- フッターメニュー --- */
+  .footer-menu {
+    background: #111;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    position: sticky; bottom: 0;
+    z-index: 900;
+  }
+  .menu-item {
+    color: #888;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+    width: 50%;
+  }
+  .menu-item.active { color: var(--gold); }
+  .menu-icon { font-size: 20px; display: block; margin-bottom: 2px; }
 
   /* --- 演出オーバーレイ (パチンコパート) --- */
   .cutin-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
     z-index: 2000;
     display: none;
     flex-direction: column;
@@ -134,12 +193,9 @@
     justify-content: center;
   }
 
-  /* オーラ（保留） */
   .aura-orb {
     width: 150px; height: 150px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fff, var(--blue));
-    box-shadow: 0 0 60px var(--blue);
     margin-bottom: 50px;
     position: relative;
     transition: all 0.3s ease;
@@ -148,20 +204,15 @@
   .aura-orb.blue { background: radial-gradient(circle, #fff, var(--blue)); box-shadow: 0 0 60px var(--blue); }
   .aura-orb.green { background: radial-gradient(circle, #fff, var(--green)); box-shadow: 0 0 60px var(--green); }
   .aura-orb.red { background: radial-gradient(circle, #fff, var(--red)); box-shadow: 0 0 80px var(--red); animation: shake-hard 0.2s infinite; }
-  .aura-orb.rainbow { 
-    background: var(--rainbow); 
-    box-shadow: 0 0 100px #ff00de; 
-    animation: spin 1s linear infinite;
-  }
+  .aura-orb.rainbow { background: var(--rainbow); box-shadow: 0 0 100px #ff00de; animation: spin 1s linear infinite; }
 
-  /* PUSHボタン */
   .push-btn {
-    width: 120px; height: 120px;
+    width: 100px; height: 100px;
     border-radius: 50%;
     border: 4px solid #fff;
     background: radial-gradient(circle, #ff0000 0%, #880000 100%);
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 900;
     cursor: pointer;
     box-shadow: 0 0 30px rgba(255,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
@@ -171,42 +222,40 @@
   }
   .push-btn:active { transform: scale(0.9); }
 
-  /* 文字カットイン */
   .cutin-text {
-    position: absolute;
-    top: 50%; left: 50%;
+    position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    font-size: 80px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 20px red;
-    white-space: nowrap;
-    z-index: 3000;
-    pointer-events: none;
+    font-size: 60px; font-weight: 900; color: #fff;
+    text-shadow: 0 0 20px red; white-space: nowrap;
+    z-index: 3000; pointer-events: none;
   }
   .cutin-anim { animation: cutin-show 0.6s ease-out forwards; }
 
-  /* --- 結果表示エリア --- */
-  .result-grid-overlay {
+  /* --- 結果＆インベントリ共通グリッド --- */
+  .overlay-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #111;
     z-index: 1500;
     display: none;
     flex-direction: column;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
-    overflow-y: auto;
   }
   
-  .result-header { text-align: center; margin-bottom: 20px; font-size: 24px; color: #fff; }
-  
+  .screen-header {
+    text-align: center; margin-bottom: 10px;
+    font-size: 20px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .scroll-area {
+    flex: 1; overflow-y: auto; padding-bottom: 80px;
+  }
+
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
   }
 
   .grid-card {
@@ -216,92 +265,110 @@
     border: 1px solid #444;
     position: relative;
     overflow: hidden;
-    animation: card-appear 0.3s ease-out forwards;
-    opacity: 0;
-    transform: scale(0.8);
+    cursor: pointer;
   }
-  
-  /* レアリティ別のカード装飾 */
-  .grid-card.SSR { border: 2px solid var(--gold); box-shadow: 0 0 15px var(--gold); }
-  .grid-card.SR { border: 1px solid #ffaa00; box-shadow: 0 0 5px #ffaa00; }
-  .grid-card.R { border: 1px solid #aaa; }
-  .grid-card.C { opacity: 0.7; }
+  /* 売却選択時のスタイル */
+  .grid-card.selected {
+    border: 3px solid #ff4444;
+    opacity: 0.6;
+  }
+  .grid-card.selected::after {
+    content: "売却";
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: red; color: white; font-size: 12px; padding: 2px 6px; border-radius: 4px;
+  }
 
+  .grid-card.SSR { border: 2px solid var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+  .grid-card.SR { border: 1px solid #ffaa00; }
+  
   .grid-card img { width: 100%; height: 100%; object-fit: cover; }
   .grid-card .info {
     position: absolute; bottom: 0; width: 100%;
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    font-size: 8px;
-    text-align: center;
-    padding: 2px 0;
+    background: rgba(0,0,0,0.85);
+    color: #fff; font-size: 9px; text-align: center; padding: 3px 0;
   }
 
-  .close-result-btn {
-    margin: 30px auto;
-    padding: 15px 40px;
-    background: #333;
-    color: #fff;
-    border: 1px solid #fff;
-    border-radius: 30px;
-    font-size: 18px;
-    cursor: pointer;
+  /* --- 下部固定アクションバー (売却用) --- */
+  .action-bar {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background: #222; border-top: 1px solid #444;
+    padding: 15px; box-sizing: border-box;
+    display: flex; justify-content: space-between; align-items: center;
   }
+  .sell-btn {
+    background: #ff4444; color: #fff; border: none; padding: 10px 20px;
+    border-radius: 20px; font-weight: bold; cursor: pointer;
+  }
+  .sell-btn:disabled { background: #555; color: #888; }
 
   /* --- ホワイトアウト --- */
   .flash-bang {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: white;
-    z-index: 5000;
-    opacity: 0;
-    pointer-events: none;
+    background: white; z-index: 5000; opacity: 0; pointer-events: none;
   }
   .flash-active { animation: flash 0.5s ease-out forwards; }
 
-  /* --- アニメーション --- */
+  /* アニメーション定義 */
   @keyframes pulse { to { transform: scale(1.05); } }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-  @keyframes shake-hard { 0% { transform: translate(2px, 2px) rotate(0deg); } 100% { transform: translate(-2px, -2px) rotate(-1deg); } }
-  @keyframes spin { 0% { transform: rotate(0deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1.1); } }
-  @keyframes pulse-btn { 0% { transform: scale(1); box-shadow: 0 0 20px red; } 100% { transform: scale(1.1); box-shadow: 0 0 50px red; } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+  @keyframes shake-hard { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-2px, -2px); } }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes pulse-btn { 0% { transform: scale(1); box-shadow: 0 0 10px red; } 100% { transform: scale(1.1); box-shadow: 0 0 30px red; } }
   @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
   @keyframes cutin-show { 
     0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 0; } 
-    50% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
+    60% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
   }
-  @keyframes card-appear { to { opacity: 1; transform: scale(1); } }
 
 </style>
 </head>
 <body>
 
 <header>
-  <div style="font-style:italic;">激熱オリパ</div>
-  <div class="points-box" id="currentPointDisplay">10,000 pt</div>
+  <div style="font-style:italic;">脳汁ORIPA</div>
+  <div class="points-box" id="headerPoints">10,000 pt</div>
 </header>
 
+<div class="tier-tabs">
+  <div class="tier-tab active" onclick="switchTier(500)" data-tier="500">500円<br>ノーマル</div>
+  <div class="tier-tab" onclick="switchTier(1000)" data-tier="1000">1,000円<br>レア</div>
+  <div class="tier-tab" onclick="switchTier(2000)" data-tier="2000">2,000円<br>超激熱</div>
+</div>
+
 <div class="main-stage">
-  <div class="banner"></div>
+  <div class="banner" id="tierBanner">
+    <div class="banner-text" id="bannerTitle">BEGINNER</div>
+    <div class="banner-sub" id="bannerSub">SSR確率 1%</div>
+  </div>
   
   <div class="gacha-controls">
-    <button class="gacha-btn btn-single" onclick="startGacha(1)">
+    <button class="gacha-btn btn-single" onclick="tryGacha(1)">
       単発ガチャ
-      <span class="cost-label">500 pt</span>
+      <span class="cost-label" id="cost1">500 pt</span>
     </button>
-    <button class="gacha-btn btn-10" onclick="startGacha(10)">
+    <button class="gacha-btn btn-10" onclick="tryGacha(10)">
       10連ガチャ
-      <span class="cost-label">5,000 pt</span>
+      <span class="cost-label" id="cost10">5,000 pt</span>
     </button>
-    <button class="gacha-btn btn-100" onclick="startGacha(100)">
+    <button class="gacha-btn btn-100" onclick="tryGacha(100)">
       100連ガチャ
-      <span class="cost-label">50,000 pt</span>
+      <span class="cost-label" id="cost100">50,000 pt</span>
     </button>
   </div>
   
-  <div style="margin-top:20px; color:#888; font-size:12px;">
-    SSR確率: 2% / SR確率: 8%<br>
-    ※演出は実際の確率と異なる場合があります(笑)
+  <div style="color:#666; font-size:12px; text-align:center;">
+    ※確率は演出上のものです。<br>
+    ※実在のカードとは関係ありません。
+  </div>
+</div>
+
+<div class="footer-menu">
+  <div class="menu-item active" onclick="showMain()">
+    <span class="menu-icon">🏠</span>ガチャ
+  </div>
+  <div class="menu-item" onclick="openInventory()">
+    <span class="menu-icon">🃏</span>カード一覧/売却
   </div>
 </div>
 
@@ -312,156 +379,211 @@
   <div class="cutin-text" id="cutinText">激熱!!</div>
 </div>
 
-<div class="result-grid-overlay" id="resultGridOverlay">
-  <div class="result-header">RESULT</div>
-  <div class="card-grid" id="cardGrid"></div>
-  <button class="close-result-btn" onclick="closeResult()">閉じる</button>
+<div class="overlay-screen" id="resultScreen">
+  <div class="screen-header">
+    <span>RESULT</span>
+    <button onclick="closeResult()" style="background:none; border:1px solid #fff; color:#fff; padding:5px 10px; border-radius:4px;">閉じる</button>
+  </div>
+  <div class="scroll-area">
+    <div class="card-grid" id="resultGrid"></div>
+  </div>
+</div>
+
+<div class="overlay-screen" id="inventoryScreen">
+  <div class="screen-header">
+    <span>所有カード</span>
+    <span style="font-size:12px; color:#aaa;">タップで選択</span>
+  </div>
+  <div class="scroll-area">
+    <div class="card-grid" id="inventoryGrid"></div>
+  </div>
+  <div class="action-bar">
+    <div style="color:#fff; font-size:14px;">
+      選択中: <span id="sellCount">0</span>枚<br>
+      売却額: <span id="sellValue" style="color:var(--gold); font-size:16px;">0</span> pt
+    </div>
+    <button class="sell-btn" id="sellBtn" onclick="sellSelectedCards()" disabled>売却する</button>
+  </div>
 </div>
 
 <div class="flash-bang" id="flashBang"></div>
 
 <script>
-  // --- データ設定 ---
-  const CARD_TYPES = [
-    { id: 1, name: "覇王龍 [神]", rarity: "SSR", weight: 2, point: 50000, color: "var(--rainbow)", img: "https://placehold.jp/30/000000/ffffff/100x150.png?text=SSR" },
-    { id: 2, name: "天才魔術師", rarity: "SR", weight: 8, point: 5000, color: "#ffaa00", img: "https://placehold.jp/30/aa8800/ffffff/100x150.png?text=SR" },
-    { id: 3, name: "エルフの戦士", rarity: "R", weight: 30, point: 1000, color: "#silver", img: "https://placehold.jp/30/555555/ffffff/100x150.png?text=R" },
-    { id: 4, name: "ゴブリンA", rarity: "C", weight: 60, point: 100, color: "#444", img: "https://placehold.jp/30/333333/aaaaaa/100x150.png?text=C" }
-  ];
+  // --- 設定データ ---
+  let userPoints = 10000;
+  let currentTier = 500;
+  let myCards = []; // 所有カード {id, tier, name, rarity, point, img, uniqueId}
 
-  let currentPoints = 100000; // テスト用に多めに
-  const COST_PER_PULL = 500;
-  
-  // 状態管理
-  let currentResults = [];
-  let currentMaxRarityVal = 0; // 0:C, 1:R, 2:SR, 3:SSR
-  let currentAuraLevel = 0; // 0:青, 1:緑, 2:赤, 3:虹
-  
-  // 初期表示
-  updatePointDisplay();
-
-  function updatePointDisplay() {
-    document.getElementById('currentPointDisplay').innerText = currentPoints.toLocaleString() + " pt";
-  }
-
-  // --- ガチャ抽選ロジック ---
-  function drawOne() {
-    const totalWeight = CARD_TYPES.reduce((sum, c) => sum + c.weight, 0);
-    const r = Math.random() * totalWeight;
-    let s = 0;
-    for (const c of CARD_TYPES) {
-      s += c.weight;
-      if (r < s) return c;
+  // ティアごとの排出設定
+  const TIERS = {
+    500: {
+      name: "BEGINNER", sub: "SSR確率 1%",
+      colors: ["#333", "#555"],
+      pool: [
+        { r:"SSR", w:1, pt:10000, name:"青眼の巨神" },
+        { r:"SR", w:5, pt:2000, name:"見習い魔導師" },
+        { r:"R", w:30, pt:300, name:"戦士の剣" },
+        { r:"C", w:64, pt:50, name:"ただの石" }
+      ]
+    },
+    1000: {
+      name: "STANDARD", sub: "SSR確率 5%",
+      colors: ["#004400", "#002200"],
+      pool: [
+        { r:"SSR", w:5, pt:30000, name:"紅蓮の竜王" },
+        { r:"SR", w:15, pt:4000, name:"エルフの剣士" },
+        { r:"R", w:40, pt:500, name:"魔法の壺" },
+        { r:"C", w:40, pt:100, name:"ゴブリン" }
+      ]
+    },
+    2000: {
+      name: "ULTIMATE", sub: "SSR確率 10% / 爆死注意",
+      colors: ["#440000", "#220000"],
+      pool: [
+        { r:"SSR", w:10, pt:100000, name:"光の創造神" },
+        { r:"SR", w:20, pt:8000, name:"暗黒騎士" },
+        { r:"R", w:30, pt:1000, name:"蘇生魔法" },
+        { r:"C", w:40, pt:200, name:"スライム" }
+      ]
     }
-    return CARD_TYPES[CARD_TYPES.length - 1];
+  };
+
+  // --- 初期化 ---
+  updateUI();
+
+  // --- ティア切り替え ---
+  function switchTier(price) {
+    currentTier = price;
+    
+    // タブのアクティブ化
+    document.querySelectorAll('.tier-tab').forEach(el => {
+      el.classList.remove('active');
+      if(parseInt(el.dataset.tier) === price) el.classList.add('active');
+    });
+
+    // バナーとボタン表示更新
+    const info = TIERS[price];
+    const banner = document.getElementById('tierBanner');
+    document.getElementById('bannerTitle').innerText = info.name;
+    document.getElementById('bannerSub').innerText = info.sub;
+    
+    // 背景色変更（雰囲気づくり）
+    banner.style.backgroundImage = `linear-gradient(45deg, ${info.colors[0]}, ${info.colors[1]})`;
+
+    document.getElementById('cost1').innerText = `${price.toLocaleString()} pt`;
+    document.getElementById('cost10').innerText = `${(price*10).toLocaleString()} pt`;
+    document.getElementById('cost100').innerText = `${(price*100).toLocaleString()} pt`;
   }
 
-  function startGacha(count) {
-    const totalCost = count * COST_PER_PULL;
-    if (currentPoints < totalCost) {
+  function updateUI() {
+    document.getElementById('headerPoints').innerText = userPoints.toLocaleString() + " pt";
+  }
+
+  // --- ガチャロジック ---
+  let tempResults = [];
+  let maxRarityVal = 0; // 演出用
+  let currentAura = 0;
+
+  function tryGacha(count) {
+    const cost = currentTier * count;
+    if (userPoints < cost) {
       alert("ポイントが足りません！");
       return;
     }
-    
-    currentPoints -= totalCost;
-    updatePointDisplay();
+    userPoints -= cost;
+    updateUI();
 
-    // 抽選実行
-    currentResults = [];
-    currentMaxRarityVal = 0;
-    for (let i = 0; i < count; i++) {
-      const card = drawOne();
-      currentResults.push(card);
-      // 最大レアリティ判定用数値
-      let rVal = 0;
-      if (card.rarity === 'R') rVal = 1;
-      if (card.rarity === 'SR') rVal = 2;
-      if (card.rarity === 'SSR') rVal = 3;
-      if (rVal > currentMaxRarityVal) currentMaxRarityVal = rVal;
+    tempResults = [];
+    maxRarityVal = 0;
+    const pool = TIERS[currentTier].pool;
+    const totalW = pool.reduce((a,c)=>a+c.w, 0);
+
+    for(let i=0; i<count; i++){
+      let r = Math.random() * totalW;
+      let selected = pool[pool.length-1];
+      for(let card of pool){
+        r -= card.w;
+        if(r < 0) { selected = card; break; }
+      }
+      
+      // 画像URL生成 (それっぽく見せる)
+      const color = selected.r === 'SSR' ? '000000' : (selected.r === 'SR' ? 'aa8800' : '555555');
+      const text = selected.r === 'SSR' ? 'GOD' : selected.r;
+      const imgUrl = `https://placehold.jp/30/${color}/ffffff/150x225.png?text=${encodeURIComponent(text)}%0A${encodeURIComponent(selected.name)}`;
+
+      // 獲得カードオブジェクト
+      const newCard = {
+        uniqueId: Date.now() + Math.random(), // 売却識別用
+        tier: currentTier,
+        rarity: selected.r,
+        name: selected.name,
+        point: selected.pt,
+        img: imgUrl
+      };
+      
+      tempResults.push(newCard);
+      
+      // 演出用最大値計算
+      let v = 0;
+      if(selected.r==='R') v=1;
+      if(selected.r==='SR') v=2;
+      if(selected.r==='SSR') v=3;
+      if(v > maxRarityVal) maxRarityVal = v;
     }
 
-    // 演出開始
-    startAnimationSequence();
+    startAnimation();
   }
 
-  // --- 演出シーケンス ---
-  function startAnimationSequence() {
+  // --- 演出 ---
+  function startAnimation() {
     const overlay = document.getElementById('cutinOverlay');
-    const orb = document.getElementById('auraOrb');
-    const pushBtn = document.getElementById('pushBtn');
-    
     overlay.style.display = 'flex';
     document.getElementById('cutinText').style.display = 'none';
+    currentAura = 0;
+    updateAura();
     
-    // オーラ初期化（ドキドキさせるために、最初は低めに設定して後で昇格させる）
-    // SSRが含まれていても、最初は青や緑からスタートさせる
-    currentAuraLevel = 0; 
-    updateAuraView();
+    document.getElementById('pushBtn').onclick = () => {
+      // 昇格抽選
+      const orb = document.getElementById('auraOrb');
+      orb.style.animation = 'none';
+      orb.offsetHeight; 
+      orb.style.animation = 'shake-hard 0.2s';
 
-    // PUSHボタンイベント設定
-    // 連打で色が昇格するかも？という演出
-    pushBtn.onclick = function() {
-      playPushEffect();
+      if (currentAura < maxRarityVal) {
+        if(Math.random() < 0.4 || maxRarityVal === 3) {
+          currentAura++;
+          updateAura();
+        }
+      }
+      
+      // 終了判定
+      if (currentAura === 3 || Math.random() < 0.15) {
+        finishAnimation();
+      }
     };
   }
 
-  // PUSH時の演出（確率で色昇格）
-  function playPushEffect() {
+  function updateAura() {
     const orb = document.getElementById('auraOrb');
-    
-    // 振動アニメーション再適用
-    orb.style.animation = 'none';
-    orb.offsetHeight; /* trigger reflow */
-    orb.style.animation = 'shake-hard 0.2s';
-
-    // 昇格ロジック（演出上の嘘も含む）
-    // 実際の最大レアリティより上には行かないように制御
-    if (currentAuraLevel < currentMaxRarityVal) {
-      // 30%の確率で昇格、またはSSR確定時は連打で上がりやすくする
-      if (Math.random() < 0.4 || currentMaxRarityVal === 3) {
-        currentAuraLevel++;
-        updateAuraView();
-      }
-    } else if (currentAuraLevel === currentMaxRarityVal && currentAuraLevel < 3) {
-        // すでに正解の色まで来ているが、フェイクで失敗音などを入れたいところ
-        // ここでは何もしない（上がらないドキドキ）
-    }
-
-    // 確定演出へ（ある程度連打させるか、ランダムで終了）
-    // ここでは単純化のため、虹になるか、または一定確率でフィニッシュ
-    if (currentAuraLevel === 3 || Math.random() < 0.15) {
-      finishAnimation();
-    }
-  }
-
-  function updateAuraView() {
-    const orb = document.getElementById('auraOrb');
-    orb.className = 'aura-orb'; // reset
-    if (currentAuraLevel === 0) orb.classList.add('blue');
-    else if (currentAuraLevel === 1) orb.classList.add('green');
-    else if (currentAuraLevel === 2) orb.classList.add('red');
-    else if (currentAuraLevel >= 3) orb.classList.add('rainbow');
+    orb.className = 'aura-orb';
+    if(currentAura === 0) orb.classList.add('blue');
+    else if(currentAura === 1) orb.classList.add('green');
+    else if(currentAura === 2) orb.classList.add('red');
+    else if(currentAura >= 3) orb.classList.add('rainbow');
   }
 
   function finishAnimation() {
-    // ボタン無効化
     document.getElementById('pushBtn').onclick = null;
-
-    // もし最終色が実際の結果より低い場合、逆転演出で色を合わせる（SSRなのに緑で止まってた場合など）
-    if (currentAuraLevel < currentMaxRarityVal) {
-      currentAuraLevel = currentMaxRarityVal;
-      updateAuraView(); // 最後に一気に変わる
+    
+    // 逆転演出（色が足りない場合合わせる）
+    if(currentAura < maxRarityVal) {
+      currentAura = maxRarityVal;
+      updateAura();
     }
 
-    // カットイン判定
-    if (currentMaxRarityVal === 3) {
-      showCutin("覚醒!!", () => showResultScreen());
-    } else if (currentMaxRarityVal === 2) {
-      showCutin("激熱!!", () => showResultScreen());
-    } else {
-      // 通常遷移
-      showResultScreen();
-    }
+    if(maxRarityVal === 3) showCutin("覚醒!!", showResult);
+    else if(maxRarityVal === 2) showCutin("激熱!!", showResult);
+    else showResult();
   }
 
   function showCutin(text, callback) {
@@ -469,10 +591,9 @@
     el.innerText = text;
     el.style.display = 'block';
     el.classList.remove('cutin-anim');
-    el.offsetHeight; 
+    el.offsetHeight;
     el.classList.add('cutin-anim');
     
-    // ホワイトアウト
     setTimeout(() => {
       document.getElementById('flashBang').classList.add('flash-active');
       setTimeout(() => {
@@ -483,40 +604,127 @@
     }, 800);
   }
 
-  function showResultScreen() {
+  function showResult() {
     document.getElementById('cutinOverlay').style.display = 'none';
-    const gridOverlay = document.getElementById('resultGridOverlay');
-    const grid = document.getElementById('cardGrid');
-    grid.innerHTML = ""; // クリア
+    const grid = document.getElementById('resultGrid');
+    grid.innerHTML = "";
+    
+    tempResults.forEach((card, i) => {
+      // 在庫に追加
+      myCards.push(card);
 
-    // カード生成（遅延表示）
-    currentResults.forEach((card, index) => {
-      const div = document.createElement('div');
-      div.className = `grid-card ${card.rarity}`;
-      div.style.animationDelay = `${index * 0.05}s`; // パラパラ表示
-      
-      div.innerHTML = `
-        <img src="${card.img}" alt="${card.name}">
+      const el = document.createElement('div');
+      el.className = `grid-card ${card.rarity}`;
+      el.style.animation = `card-appear 0.3s ease forwards ${i*0.03}s`;
+      el.style.opacity = "0";
+      el.innerHTML = `
+        <img src="${card.img}">
         <div class="info">
-          <span style="color:${getRarityColor(card.rarity)}">${card.rarity}</span><br>
-          ${card.point}pt
+          <span style="color:${getRColor(card.rarity)}">${card.rarity}</span><br>
+          ${card.point.toLocaleString()}pt
         </div>
       `;
-      grid.appendChild(div);
+      grid.appendChild(el);
     });
-
-    gridOverlay.style.display = 'flex';
-  }
-
-  function getRarityColor(rarity) {
-    if (rarity === 'SSR') return 'gold';
-    if (rarity === 'SR') return 'orange';
-    if (rarity === 'R') return 'lightblue';
-    return 'white';
+    document.getElementById('resultScreen').style.display = 'flex';
   }
 
   function closeResult() {
-    document.getElementById('resultGridOverlay').style.display = 'none';
+    document.getElementById('resultScreen').style.display = 'none';
+  }
+
+  function getRColor(r) {
+    if(r==='SSR') return 'gold';
+    if(r==='SR') return 'orange';
+    return 'white';
+  }
+
+  // --- インベントリ & 売却 ---
+  
+  function showMain() {
+    document.getElementById('inventoryScreen').style.display = 'none';
+  }
+
+  let selectedCards = new Set();
+
+  function openInventory() {
+    document.getElementById('inventoryScreen').style.display = 'flex';
+    renderInventory();
+  }
+
+  function renderInventory() {
+    const grid = document.getElementById('inventoryGrid');
+    grid.innerHTML = "";
+    selectedCards.clear();
+    updateSellUI();
+
+    if(myCards.length === 0) {
+      grid.innerHTML = "<div style='color:#666; text-align:center; padding:20px; grid-column:1/-1;'>カードを持っていません</div>";
+      return;
+    }
+
+    // 新しい順に表示
+    [...myCards].reverse().forEach(card => {
+      const el = document.createElement('div');
+      el.className = `grid-card ${card.rarity}`;
+      el.dataset.id = card.uniqueId;
+      el.innerHTML = `
+        <img src="${card.img}">
+        <div class="info">
+          ${card.point.toLocaleString()}pt
+        </div>
+      `;
+      
+      // クリックで選択/解除
+      el.onclick = () => {
+        if(selectedCards.has(card.uniqueId)) {
+          selectedCards.delete(card.uniqueId);
+          el.classList.remove('selected');
+        } else {
+          selectedCards.add(card.uniqueId);
+          el.classList.add('selected');
+        }
+        updateSellUI();
+      };
+      
+      grid.appendChild(el);
+    });
+  }
+
+  function updateSellUI() {
+    const count = selectedCards.size;
+    let totalVal = 0;
+    
+    selectedCards.forEach(uid => {
+      const c = myCards.find(x => x.uniqueId === uid);
+      if(c) totalVal += c.point;
+    });
+
+    document.getElementById('sellCount').innerText = count;
+    document.getElementById('sellValue').innerText = totalVal.toLocaleString();
+    document.getElementById('sellBtn').disabled = (count === 0);
+  }
+
+  function sellSelectedCards() {
+    if(selectedCards.size === 0) return;
+    if(!confirm(`${selectedCards.size}枚のカードを売却しますか？`)) return;
+
+    let sellTotal = 0;
+    // 売却対象のポイント集計と削除
+    myCards = myCards.filter(c => {
+      if(selectedCards.has(c.uniqueId)) {
+        sellTotal += c.point;
+        return false; // リストから除外
+      }
+      return true; // 残す
+    });
+
+    userPoints += sellTotal;
+    updateUI();
+    
+    // UI更新
+    renderInventory();
+    alert(`${sellTotal.toLocaleString()} pt 獲得しました！`);
   }
 
 </script>
