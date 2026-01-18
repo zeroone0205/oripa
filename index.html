@@ -3,418 +3,416 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>脳汁オリパ | 還元率特化版</title>
+<title>CYBER ORIPA | 脳汁覚醒</title>
 <style>
   :root {
-    --gold: #FFD700;
-    --red: #ff2a2a;
-    --blue: #2a2aff;
-    --green: #2aff2a;
-    --rainbow: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-    --bg-dark: #050505;
+    --neon-blue: #00f3ff;
+    --neon-purple: #bc13fe;
+    --neon-gold: #ffd700;
+    --bg-color: #030305;
+    --glass: rgba(255, 255, 255, 0.05);
   }
 
   body {
     margin: 0;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-color);
     color: #fff;
-    font-family: "Arial Black", sans-serif;
-    overflow: hidden; 
+    font-family: "Arial", sans-serif; /* サイバー感を出すためゴシック系 */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100vh;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    /* 背景のサイバーグリッド */
+    background-image: 
+      linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
   }
 
   /* --- ヘッダー --- */
   header {
-    background: rgba(0,0,0,0.95);
+    background: rgba(3, 3, 5, 0.9);
+    backdrop-filter: blur(10px);
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #333;
+    border-bottom: 1px solid var(--neon-blue);
     z-index: 100;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
     height: 60px;
     box-sizing: border-box;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
   }
-  .header-title { font-style: italic; font-size: 18px; }
+  .header-title { 
+    font-style: italic; font-weight: 900; font-size: 18px; 
+    text-shadow: 0 0 10px var(--neon-blue);
+    letter-spacing: 1px;
+  }
   .points-box {
-    background: linear-gradient(to right, #222, #444);
+    background: rgba(0,0,0,0.5);
     padding: 5px 15px;
-    border-radius: 20px;
-    border: 2px solid var(--gold);
-    color: var(--gold);
+    border-radius: 4px;
+    border: 1px solid var(--neon-gold);
+    color: var(--neon-gold);
     font-weight: bold;
-    text-shadow: 0 0 5px var(--gold);
+    text-shadow: 0 0 8px var(--neon-gold);
     font-size: 14px;
+    font-family: monospace; /* 数字っぽく */
   }
 
-  /* --- メインエリア（縦スクロール） --- */
+  /* --- メインエリア --- */
   .main-stage {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     padding-bottom: 100px;
-    background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
   }
 
-  /* ガチャの箱 */
+  /* ガチャボックス（デジタルカプセルUI） */
   .gacha-box {
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    padding: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: var(--glass);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    border-radius: 4px; /* 角張ったデザイン */
+    margin-bottom: 30px;
+    padding: 1px;
+    position: relative;
+    clip-path: polygon(
+      10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px
+    );
+    transition: transform 0.2s;
+  }
+  .gacha-box:active { transform: scale(0.98); }
+  
+  /* 角の装飾 */
+  .gacha-box::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 10px; height: 10px;
+    border-top: 2px solid var(--neon-blue); border-left: 2px solid var(--neon-blue);
+  }
+  .gacha-box::after {
+    content: ""; position: absolute; bottom: 0; right: 0; width: 10px; height: 10px;
+    border-bottom: 2px solid var(--neon-blue); border-right: 2px solid var(--neon-blue);
   }
 
   .banner {
-    width: 100%;
-    height: 150px;
+    width: 100%; height: 140px;
     background: #000;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 2px solid #444;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .banner-overlay {
+    position: absolute; width: 100%; height: 100%;
+    background: linear-gradient(45deg, rgba(0,0,0,0.8), transparent);
+    z-index: 1;
   }
   .banner-text {
     font-size: 28px; font-weight: 900; z-index: 2;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    text-transform: uppercase; letter-spacing: 2px;
+    font-style: italic;
   }
   .banner-sub {
-    font-size: 12px; color: #ddd; z-index: 2;
-    background: rgba(0,0,0,0.6); padding: 2px 8px;
-    border-radius: 4px; margin-top: 5px;
+    font-size: 10px; color: #fff; z-index: 2;
+    background: var(--neon-blue); color: #000;
+    padding: 2px 8px; margin-top: 5px; font-weight: bold;
   }
 
-  /* ボタン群 */
   .gacha-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px;
   }
   .gacha-btn {
-    border: none;
-    padding: 12px 0;
-    font-size: 13px;
-    font-weight: 900;
-    color: white;
-    border-radius: 8px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 10px;
+    font-weight: bold;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.1s;
-    text-shadow: 0 2px 0 rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: center;
+    transition: 0.2s;
+    font-family: monospace;
   }
-  .gacha-btn:active { transform: scale(0.95); }
-  
-  .btn-single {
-    background: linear-gradient(180deg, #555 0%, #333 100%);
-    box-shadow: 0 4px 0 #222;
-    grid-column: 1 / 3;
+  .gacha-btn:hover {
+    background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue);
   }
-  .btn-10 {
-    background: linear-gradient(180deg, #e94343 0%, #a82e2e 100%);
-    box-shadow: 0 4px 0 #681515;
-  }
-  .btn-100 {
-    background: linear-gradient(180deg, #e9b443 0%, #a8822e 100%);
-    box-shadow: 0 4px 0 #685015;
-  }
-  .cost-label { font-size: 10px; margin-top: 2px; opacity: 0.9; font-weight: normal; }
+  .btn-single { grid-column: 1 / 3; background: rgba(255,255,255,0.05); border-color: #fff; color: #fff; }
+  .cost-label { display: block; font-size: 10px; opacity: 0.7; }
 
-  /* --- フッターメニュー --- */
+  /* --- フッター --- */
   .footer-menu {
-    background: #111;
+    background: rgba(0,0,0,0.9);
     border-top: 1px solid #333;
-    display: flex;
-    justify-content: space-around;
+    display: flex; justify-content: space-around;
     padding: 10px 0;
     position: fixed; bottom: 0; left: 0; width: 100%;
-    z-index: 900;
-    height: 60px;
-    box-sizing: border-box;
+    z-index: 900; height: 60px; box-sizing: border-box;
   }
-  .menu-item {
-    color: #888;
-    text-align: center;
-    font-size: 10px;
-    cursor: pointer;
-    width: 50%;
-  }
-  .menu-item:active { opacity: 0.7; }
+  .menu-item { color: #555; text-align: center; font-size: 10px; cursor: pointer; width: 50%; }
+  .menu-item.active { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
   .menu-icon { font-size: 20px; display: block; margin-bottom: 2px; }
 
-  /* --- 演出オーバーレイ (パチンコパート) --- */
+  /* --- 演出オーバーレイ (サイバーコア) --- */
   .cutin-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 2000;
+    background: radial-gradient(circle, #1a1a2e 0%, #000 100%);
+    z-index: 8000; /* 高めに設定 */
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  .aura-orb {
-    width: 150px; height: 150px;
-    border-radius: 50%;
-    margin-bottom: 50px;
+  /* ヘキサゴン・コア */
+  .hex-core-container {
     position: relative;
-    transition: all 0.3s ease;
-    animation: float 2s ease-in-out infinite;
-  }
-  .aura-orb.blue { background: radial-gradient(circle, #fff, var(--blue)); box-shadow: 0 0 60px var(--blue); }
-  .aura-orb.green { background: radial-gradient(circle, #fff, var(--green)); box-shadow: 0 0 60px var(--green); }
-  .aura-orb.red { background: radial-gradient(circle, #fff, var(--red)); box-shadow: 0 0 80px var(--red); animation: shake-hard 0.2s infinite; }
-  .aura-orb.rainbow { background: var(--rainbow); box-shadow: 0 0 100px #ff00de; animation: spin 1s linear infinite; }
-
-  .push-btn {
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    background: radial-gradient(circle, #ff0000 0%, #880000 100%);
-    color: #fff;
-    font-size: 20px;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
-    animation: pulse-btn 0.5s infinite alternate;
+    width: 200px; height: 200px;
     display: flex; align-items: center; justify-content: center;
-    z-index: 2001;
   }
-  .push-btn:active { transform: scale(0.9); }
-
-  .cutin-text {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 60px; font-weight: 900; color: #fff;
-    text-shadow: 0 0 20px red; white-space: nowrap;
-    z-index: 3000; pointer-events: none;
+  
+  .hex-core {
+    width: 120px; height: 120px;
+    background: #000;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    border: 2px solid var(--neon-blue);
+    box-shadow: 0 0 20px var(--neon-blue), inset 0 0 20px var(--neon-blue);
+    z-index: 2;
+    transition: 0.3s;
+    cursor: pointer;
   }
-  .cutin-anim { animation: cutin-show 0.6s ease-out forwards; }
+  
+  /* コアの回転リング */
+  .core-ring {
+    position: absolute;
+    width: 180px; height: 180px;
+    border: 2px dashed rgba(0, 243, 255, 0.3);
+    border-radius: 50%;
+    animation: spin-slow 10s linear infinite;
+  }
+  .core-ring::before {
+    content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px;
+    background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue);
+  }
 
-  /* --- 結果＆インベントリ共通グリッド --- */
-  .overlay-screen {
+  /* 状態：青（通常） */
+  .hex-core.blue { 
+    border-color: var(--neon-blue); 
+    box-shadow: 0 0 30px var(--neon-blue);
+  }
+  .hex-core.blue .core-text { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
+
+  /* 状態：紫（昇格/暴走） */
+  .hex-core.purple { 
+    border-color: var(--neon-purple); 
+    box-shadow: 0 0 50px var(--neon-purple), inset 0 0 30px var(--neon-purple);
+    animation: shake 0.1s infinite;
+  }
+  .hex-core.purple .core-text { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
+
+  /* 状態：金/虹（確定） */
+  .hex-core.gold {
+    border-color: var(--neon-gold);
+    background: #fff;
+    box-shadow: 0 0 80px var(--neon-gold), 0 0 150px var(--neon-gold);
+    animation: spin-fast 0.5s linear infinite;
+  }
+
+  .core-text {
+    font-family: "Arial Black", sans-serif;
+    font-size: 20px; font-weight: 900;
+    pointer-events: none;
+  }
+
+  .tap-hint {
+    margin-top: 40px; color: #fff; letter-spacing: 3px; font-size: 12px;
+    animation: blink 1s infinite;
+  }
+
+  /* --- 結果画面 --- */
+  .result-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #111;
-    z-index: 1500;
-    display: none;
+    background: rgba(0,0,0,0.95);
+    z-index: 7000; /* 演出より下、ヘッダーより上 */
+    display: none; /* デフォルト非表示 */
     flex-direction: column;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: 20px; box-sizing: border-box;
   }
   
-  .screen-header {
-    text-align: center; margin-bottom: 10px;
-    font-size: 18px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px;
+  .result-header {
     display: flex; justify-content: space-between; align-items: center;
-    height: 40px;
+    border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px;
   }
-  
-  .back-btn {
-    background: none; border: 1px solid #666; color: #ddd;
-    padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .back-btn:hover { background: #333; color: #fff; border-color: #fff; }
-
-  .scroll-area {
-    flex: 1; overflow-y: auto; padding-bottom: 80px;
+  .result-title { font-size: 24px; font-style: italic; font-weight: 900; color: #fff; }
+  .close-btn {
+    background: transparent; border: 1px solid #fff; color: #fff;
+    padding: 5px 15px; cursor: pointer; border-radius: 20px;
   }
 
-  .card-grid {
+  .grid-container {
+    flex: 1; overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 8px;
+    gap: 10px;
+    padding-bottom: 50px;
   }
 
-  .grid-card {
+  .card-item {
     aspect-ratio: 2/3;
-    background: #222;
-    border-radius: 6px;
-    border: 1px solid #444;
+    background: #111;
+    border-radius: 4px;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
+    border: 1px solid #333;
+    opacity: 0; /* アニメーション用 */
+    transform: scale(0.5);
   }
-  /* 売却選択時のスタイル */
-  .grid-card.selected {
-    border: 3px solid #ff4444;
-    opacity: 0.6;
-  }
-  .grid-card.selected::after {
-    content: "売却";
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    background: red; color: white; font-size: 12px; padding: 2px 6px; border-radius: 4px;
-  }
-
-  .grid-card.SSR { border: 2px solid var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-  .grid-card.SR { border: 1px solid #ffaa00; }
   
-  .grid-card img { width: 100%; height: 100%; object-fit: cover; }
-  .grid-card .info {
+  /* レアリティ演出 */
+  .card-item.SSR { 
+    border: 2px solid var(--neon-gold); 
+    box-shadow: 0 0 15px var(--neon-gold); 
+  }
+  .card-item.SR { border: 1px solid var(--neon-purple); box-shadow: 0 0 5px var(--neon-purple); }
+  
+  .card-item img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .card-info {
     position: absolute; bottom: 0; width: 100%;
-    background: rgba(0,0,0,0.85);
-    color: #fff; font-size: 9px; text-align: center; padding: 3px 0;
+    background: rgba(0,0,0,0.8);
+    font-size: 9px; text-align: center; color: #fff; padding: 2px 0;
   }
 
-  /* --- 下部固定アクションバー (売却用) --- */
-  .action-bar {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    background: #222; border-top: 1px solid #444;
-    padding: 15px; box-sizing: border-box;
-    display: flex; justify-content: space-between; align-items: center;
+  /* --- インベントリ --- */
+  .inventory-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #050505;
+    z-index: 6000;
+    display: none;
+    flex-direction: column;
   }
-  .sell-btn {
-    background: #ff4444; color: #fff; border: none; padding: 10px 20px;
-    border-radius: 20px; font-weight: bold; cursor: pointer;
-  }
-  .sell-btn:disabled { background: #555; color: #888; }
+  .inv-header { padding: 15px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 10px; }
+  .inv-grid { flex: 1; overflow-y: auto; padding: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+  .action-bar { padding: 15px; background: #111; border-top: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  
+  /* 選択状態 */
+  .card-item.selected { border: 2px solid var(--neon-red); opacity: 0.6; }
+  .card-item.selected::after { content: "売却"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--neon-red); padding: 2px 5px; font-size: 10px; }
 
-  /* --- ホワイトアウト --- */
+  /* --- エフェクト --- */
   .flash-bang {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: white; z-index: 5000; opacity: 0; pointer-events: none;
+    background: #fff; z-index: 9999;
+    opacity: 0; pointer-events: none;
   }
-  .flash-active { animation: flash 0.5s ease-out forwards; }
+  .flash-active { animation: flash-anim 0.5s forwards; }
 
-  /* アニメーション定義 */
-  @keyframes pulse { to { transform: scale(1.05); } }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-  @keyframes shake-hard { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-2px, -2px); } }
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  @keyframes pulse-btn { 0% { transform: scale(1); box-shadow: 0 0 10px red; } 100% { transform: scale(1.1); box-shadow: 0 0 30px red; } }
-  @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
-  @keyframes cutin-show { 
-    0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 0; } 
-    60% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-  }
+  @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+  @keyframes spin-fast { 100% { transform: rotate(360deg); } }
+  @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  @keyframes flash-anim { 0% { opacity: 0; } 10% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes card-pop { to { opacity: 1; transform: scale(1); } }
 
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-title">脳汁ORIPA</div>
-  <div class="points-box" id="headerPoints">999,999,999 pt</div>
+  <div class="header-title">CYBER ORIPA</div>
+  <div class="points-box" id="headerPoints">999,999,999</div>
 </header>
 
-<div class="main-stage" id="gachaContainer">
-  </div>
+<div class="main-stage" id="gachaContainer"></div>
 
 <div class="footer-menu">
-  <div class="menu-item" onclick="showMain()">
-    <span class="menu-icon">🏠</span>ガチャ
+  <div class="menu-item active" onclick="showMain()">
+    <span class="menu-icon">⬢</span>CORE
   </div>
   <div class="menu-item" onclick="openInventory()">
-    <span class="menu-icon">🃏</span>カード一覧/売却
+    <span class="menu-icon">▤</span>STORAGE
   </div>
 </div>
 
 <div class="cutin-overlay" id="cutinOverlay">
-  <div style="color:#fff; margin-bottom:20px; font-weight:bold; letter-spacing:2px;">TAP TO CHARGE!</div>
-  <div class="aura-orb blue" id="auraOrb"></div>
-  <div class="push-btn" id="pushBtn">PUSH</div>
-  <div class="cutin-text" id="cutinText">激熱!!</div>
-</div>
-
-<div class="overlay-screen" id="resultScreen">
-  <div class="screen-header">
-    <span>RESULT</span>
-    <button class="back-btn" onclick="closeResult()">× 閉じる</button>
-  </div>
-  <div class="scroll-area">
-    <div class="card-grid" id="resultGrid"></div>
-  </div>
-</div>
-
-<div class="overlay-screen" id="inventoryScreen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="showMain()">← 戻る</button>
-    <span>所有カード</span>
-    <div style="width:50px;"></div> </div>
-  <div class="scroll-area">
-    <div class="card-grid" id="inventoryGrid"></div>
-  </div>
-  <div class="action-bar">
-    <div style="color:#fff; font-size:12px;">
-      選択中: <span id="sellCount">0</span>枚<br>
-      売却額: <span id="sellValue" style="color:var(--gold); font-size:16px;">0</span> pt
+  <div class="hex-core-container">
+    <div class="core-ring"></div>
+    <div class="hex-core blue" id="hexCore">
+      <span class="core-text">PUSH</span>
     </div>
-    <button class="sell-btn" id="sellBtn" onclick="sellSelectedCards()" disabled>まとめて売却</button>
+  </div>
+  <div class="tap-hint">TAP TO OVERLOAD</div>
+</div>
+
+<div class="result-overlay" id="resultScreen">
+  <div class="result-header">
+    <span class="result-title">SYSTEM_RESULT</span>
+    <button class="close-btn" onclick="closeResult()">CLOSE [×]</button>
+  </div>
+  <div class="grid-container" id="resultGrid"></div>
+</div>
+
+<div class="inventory-overlay" id="inventoryScreen">
+  <div class="inv-header">
+    <button class="close-btn" onclick="showMain()">← BACK</button>
+    <span style="font-weight:bold;">STORAGE</span>
+  </div>
+  <div class="inv-grid" id="inventoryGrid"></div>
+  <div class="action-bar">
+    <div style="font-size:12px; color:#aaa;">
+      Selected: <span id="sellCount" style="color:#fff;">0</span><br>
+      Value: <span id="sellValue" style="color:var(--neon-gold);">0</span> pt
+    </div>
+    <button class="close-btn" id="sellBtn" onclick="sellSelectedCards()" style="background:var(--neon-red); border:none;" disabled>SELL ALL</button>
   </div>
 </div>
 
 <div class="flash-bang" id="flashBang"></div>
 
 <script>
-  // --- 設定データ ---
-  let userPoints = 999999999; // テスト用無限ポイント
-  let myCards = []; 
+  /* --- 確率・還元率設計 --- */
+  let userPoints = 999999999;
+  let myCards = [];
+  let tempResults = [];
+  let maxRarityVal = 0;
+  let currentPhase = 0; // 0:Idle, 1:Blue, 2:Purple, 3:Gold
 
-  // ★ 還元率設計（期待値92-96% / 最低保証80-90%）
   const TIERS = [
     {
       price: 500,
-      name: "BEGINNER", 
-      sub: "最低保証400pt (80%) 安心設計",
-      colors: ["#333", "#555"],
+      name: "BEGINNER_CORE",
+      sub: "Rebate: 80%~ / Risk: Low",
+      color: "var(--neon-blue)",
       pool: [
-        // SSR: 0.5% (還元率 4000%)
-        { r:"SSR", w:0.5, pt:20000, name:"青眼の巨神" },
-        // SR: 3% (還元率 600%)
-        { r:"SR", w:3, pt:3000, name:"見習い魔導師" },
-        // R: 20% (還元率 110%)
-        { r:"R", w:20, pt:550, name:"戦士の剣" },
-        // C: 76.5% (還元率 80-90%)
-        { r:"C", w:76.5, pt:420, name:"ただの石" }
+        { r:"SSR", w:0.5, pt:20000, name:"Genesis Dragon" },
+        { r:"SR", w:3, pt:3000, name:"Cyber Mage" },
+        { r:"R", w:20, pt:550, name:"Neon Soldier" },
+        { r:"C", w:76.5, pt:420, name:"Data Scrap" }
       ]
     },
     {
       price: 1000,
-      name: "STANDARD", 
-      sub: "期待値94% / ハイリスクハイリターン",
-      colors: ["#004400", "#002200"],
+      name: "STANDARD_CORE",
+      sub: "Rebate: 94% / Risk: Med",
+      color: "var(--neon-purple)",
       pool: [
-        // SSR: 1% (還元率 5000%)
-        { r:"SSR", w:1, pt:50000, name:"紅蓮の竜王" },
-        // SR: 5% (還元率 500%)
-        { r:"SR", w:5, pt:5000, name:"エルフの剣士" },
-        // R: 20% (還元率 110%)
-        { r:"R", w:20, pt:1100, name:"魔法の壺" },
-        // C: 74% (還元率 85%)
-        { r:"C", w:74, pt:850, name:"ゴブリン" }
+        { r:"SSR", w:1, pt:50000, name:"Plasma Dragon" },
+        { r:"SR", w:5, pt:5000, name:"Void Walker" },
+        { r:"R", w:20, pt:1100, name:"Energy Pod" },
+        { r:"C", w:74, pt:850, name:"Glitch Mob" }
       ]
     },
     {
       price: 2000,
-      name: "ULTIMATE", 
-      sub: "一撃必殺 / 天国か地獄か",
-      colors: ["#440000", "#220000"],
+      name: "ULTIMATE_CORE",
+      sub: "Rebate: ??? / Risk: High",
+      color: "var(--neon-gold)",
       pool: [
-        // SSR: 1.5% (還元率 7500%)
-        { r:"SSR", w:1.5, pt:150000, name:"光の創造神" },
-        // SR: 8% (還元率 500%)
-        { r:"SR", w:8, pt:10000, name:"暗黒騎士" },
-        // R: 25% (還元率 105%)
-        { r:"R", w:25, pt:2100, name:"蘇生魔法" },
-        // C: 65.5% (還元率 80%)
-        { r:"C", w:65.5, pt:1600, name:"スライム" }
+        { r:"SSR", w:1.5, pt:150000, name:"The Architect" },
+        { r:"SR", w:8, pt:10000, name:"Dark Knight" },
+        { r:"R", w:25, pt:2100, name:"Revive Code" },
+        { r:"C", w:65.5, pt:1600, name:"Slime.exe" }
       ]
     }
   ];
@@ -423,211 +421,169 @@
   updateUI();
   renderGachaList();
 
-  // --- 画面描画 ---
+  function updateUI() {
+    document.getElementById('headerPoints').innerText = userPoints.toLocaleString();
+  }
+
   function renderGachaList() {
     const container = document.getElementById('gachaContainer');
     container.innerHTML = "";
-
     TIERS.forEach(tier => {
       const box = document.createElement('div');
       box.className = 'gacha-box';
       
-      const banner = document.createElement('div');
-      banner.className = 'banner';
-      banner.style.backgroundImage = `linear-gradient(45deg, ${tier.colors[0]}, ${tier.colors[1]})`;
-      banner.innerHTML = `
-        <div class="banner-text">${tier.name}</div>
-        <div class="banner-sub">${tier.sub}</div>
+      box.innerHTML = `
+        <div class="banner">
+          <div class="banner-overlay" style="background: linear-gradient(45deg, ${tier.color}22, #000);"></div>
+          <div class="banner-text" style="color:${tier.color}">${tier.name}</div>
+          <div class="banner-sub">${tier.sub}</div>
+        </div>
+        <div class="gacha-controls">
+          <div class="gacha-btn btn-single" onclick="initGacha(${tier.price}, 1)">
+            SINGLE<br><span class="cost-label">${tier.price} pt</span>
+          </div>
+          <div class="gacha-btn" onclick="initGacha(${tier.price}, 10)">
+            x10<br><span class="cost-label">${tier.price*10} pt</span>
+          </div>
+          <div class="gacha-btn" onclick="initGacha(${tier.price}, 100)">
+            x100<br><span class="cost-label">${tier.price*100} pt</span>
+          </div>
+        </div>
       `;
-
-      const controls = document.createElement('div');
-      controls.className = 'gacha-controls';
-      controls.innerHTML = `
-        <button class="gacha-btn btn-single" onclick="tryGacha(${tier.price}, 1)">
-          単発ガチャ
-          <span class="cost-label">${tier.price.toLocaleString()} pt</span>
-        </button>
-        <button class="gacha-btn btn-10" onclick="tryGacha(${tier.price}, 10)">
-          10連ガチャ
-          <span class="cost-label">${(tier.price * 10).toLocaleString()} pt</span>
-        </button>
-        <button class="gacha-btn btn-100" onclick="tryGacha(${tier.price}, 100)">
-          100連ガチャ
-          <span class="cost-label">${(tier.price * 100).toLocaleString()} pt</span>
-        </button>
-      `;
-
-      box.appendChild(banner);
-      box.appendChild(controls);
       container.appendChild(box);
     });
   }
 
-  function updateUI() {
-    document.getElementById('headerPoints').innerText = userPoints.toLocaleString() + " pt";
-  }
-
   // --- ガチャロジック ---
-  let tempResults = [];
-  let maxRarityVal = 0; // 演出用
-  let currentAura = 0;
-
-  function tryGacha(price, count) {
-    const cost = price * count;
-    // テストモードなのでポイント減算はコメントアウト
-    // if (userPoints < cost) { alert("ポイントが足りません！"); return; }
-    // userPoints -= cost; 
+  function initGacha(price, count) {
+    // ポイント減算（テストモードなのでチェックのみ）
+    // if(userPoints < price*count) { alert("Insufficient Points"); return; }
     
-    updateUI();
-
+    // 抽選処理
     tempResults = [];
     maxRarityVal = 0;
-    
-    const targetTier = TIERS.find(t => t.price === price);
-    const pool = targetTier.pool;
-    const totalW = pool.reduce((a,c)=>a+c.w, 0);
+    const tierData = TIERS.find(t => t.price === price);
+    const totalW = tierData.pool.reduce((a,c)=>a+c.w, 0);
 
     for(let i=0; i<count; i++){
       let r = Math.random() * totalW;
-      let selected = pool[pool.length-1];
-      for(let card of pool){
-        r -= card.w;
-        if(r < 0) { selected = card; break; }
+      let card = tierData.pool[tierData.pool.length-1];
+      for(let c of tierData.pool){
+        r -= c.w;
+        if(r < 0) { card = c; break; }
       }
       
-      const color = selected.r === 'SSR' ? '000000' : (selected.r === 'SR' ? 'aa8800' : '555555');
-      const text = selected.r === 'SSR' ? 'GOD' : selected.r;
-      const imgUrl = `https://placehold.jp/30/${color}/ffffff/150x225.png?text=${encodeURIComponent(text)}%0A${encodeURIComponent(selected.name)}`;
+      // 画像生成 (Placehold.jp)
+      const colorMap = { SSR:'000000', SR:'aa00aa', R:'0055aa', C:'333333' };
+      const imgUrl = `https://placehold.jp/30/${colorMap[card.r]}/ffffff/150x225.png?text=${card.r}%0A${encodeURIComponent(card.name)}`;
 
-      const newCard = {
-        uniqueId: Date.now() + Math.random(), 
-        tier: price,
-        rarity: selected.r,
-        name: selected.name,
-        point: selected.pt,
+      tempResults.push({
+        uid: Date.now() + Math.random(),
+        ...card,
         img: imgUrl
-      };
-      
-      tempResults.push(newCard);
-      
+      });
+
+      // 演出用レア度チェック
       let v = 0;
-      if(selected.r==='R') v=1;
-      if(selected.r==='SR') v=2;
-      if(selected.r==='SSR') v=3;
+      if(card.r === 'SR') v=1;
+      if(card.r === 'SSR') v=2;
       if(v > maxRarityVal) maxRarityVal = v;
     }
 
     startAnimation();
   }
 
-  // --- 演出 ---
+  // --- 演出フロー ---
   function startAnimation() {
     const overlay = document.getElementById('cutinOverlay');
-    overlay.style.display = 'flex';
-    document.getElementById('cutinText').style.display = 'none';
-    currentAura = 0;
-    updateAura();
+    const core = document.getElementById('hexCore');
+    const txt = core.querySelector('.core-text');
     
-    document.getElementById('pushBtn').onclick = () => {
-      const orb = document.getElementById('auraOrb');
-      orb.style.animation = 'none';
-      orb.offsetHeight; 
-      orb.style.animation = 'shake-hard 0.2s';
-
-      if (currentAura < maxRarityVal) {
-        if(Math.random() < 0.4 || maxRarityVal === 3) {
-          currentAura++;
-          updateAura();
-        }
-      }
-      
-      if (currentAura === 3 || Math.random() < 0.15) {
-        finishAnimation();
+    overlay.style.display = 'flex';
+    
+    // Phase 1: Blue (Idle -> Active)
+    currentPhase = 0;
+    core.className = 'hex-core blue';
+    txt.innerText = "PUSH";
+    
+    core.onclick = () => {
+      // Phase 2: Purple (Overload)
+      if(currentPhase === 0) {
+        currentPhase = 1;
+        core.className = 'hex-core purple';
+        txt.innerText = "LOAD...";
+        
+        // 溜め時間
+        setTimeout(() => {
+          // SSRなら確定演出へ
+          if(maxRarityVal >= 2 || Math.random() < 0.3) {
+             currentPhase = 2;
+             core.className = 'hex-core gold';
+             txt.innerText = "SSS";
+          }
+          
+          // ホワイトアウトして結果へ
+          setTimeout(() => {
+            triggerFlash();
+          }, 800);
+          
+        }, 1500); // 1.5秒溜める
       }
     };
   }
 
-  function updateAura() {
-    const orb = document.getElementById('auraOrb');
-    orb.className = 'aura-orb';
-    if(currentAura === 0) orb.classList.add('blue');
-    else if(currentAura === 1) orb.classList.add('green');
-    else if(currentAura === 2) orb.classList.add('red');
-    else if(currentAura >= 3) orb.classList.add('rainbow');
-  }
-
-  function finishAnimation() {
-    document.getElementById('pushBtn').onclick = null;
+  function triggerFlash() {
+    const flash = document.getElementById('flashBang');
+    flash.classList.add('flash-active');
     
-    if(currentAura < maxRarityVal) {
-      currentAura = maxRarityVal;
-      updateAura();
-    }
-
-    if(maxRarityVal === 3) showCutin("覚醒!!", showResult);
-    else if(maxRarityVal === 2) showCutin("激熱!!", showResult);
-    else showResult();
-  }
-
-  function showCutin(text, callback) {
-    const el = document.getElementById('cutinText');
-    el.innerText = text;
-    el.style.display = 'block';
-    el.classList.remove('cutin-anim');
-    el.offsetHeight;
-    el.classList.add('cutin-anim');
-    
+    // フラッシュの真っ白なタイミングで画面切り替え
     setTimeout(() => {
-      document.getElementById('flashBang').classList.add('flash-active');
-      setTimeout(() => {
-        callback();
-        document.getElementById('flashBang').classList.remove('flash-active');
-        document.getElementById('cutinOverlay').style.display = 'none';
-      }, 300);
-    }, 800);
+      document.getElementById('cutinOverlay').style.display = 'none';
+      showResult();
+    }, 200); 
+
+    setTimeout(() => {
+      flash.classList.remove('flash-active');
+    }, 600);
   }
 
+  // --- 結果表示 ---
   function showResult() {
-    document.getElementById('cutinOverlay').style.display = 'none';
+    const screen = document.getElementById('resultScreen');
     const grid = document.getElementById('resultGrid');
     grid.innerHTML = "";
     
+    screen.style.display = 'flex'; // ★ここが表示トリガー
+
     tempResults.forEach((card, i) => {
-      myCards.push(card);
+      myCards.push(card); // 在庫追加
 
       const el = document.createElement('div');
-      el.className = `grid-card ${card.rarity}`;
-      el.style.animation = `card-appear 0.3s ease forwards ${i*0.03}s`;
-      el.style.opacity = "0";
+      el.className = `card-item ${card.r}`;
+      // パラパラ表示アニメーション
+      el.style.animation = `card-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards ${i * 0.05}s`;
+      
       el.innerHTML = `
         <img src="${card.img}">
-        <div class="info">
-          <span style="color:${getRColor(card.rarity)}">${card.rarity}</span><br>
-          ${card.point.toLocaleString()}pt
+        <div class="card-info">
+          <span style="color:${card.r==='SSR'?'gold':'white'}">${card.r}</span><br>
+          ${card.pt.toLocaleString()}
         </div>
       `;
       grid.appendChild(el);
     });
-    document.getElementById('resultScreen').style.display = 'flex';
   }
 
   function closeResult() {
     document.getElementById('resultScreen').style.display = 'none';
   }
 
-  function getRColor(r) {
-    if(r==='SSR') return 'gold';
-    if(r==='SR') return 'orange';
-    return 'white';
-  }
-
   // --- インベントリ & 売却 ---
-  
   function showMain() {
-    document.querySelectorAll('.overlay-screen').forEach(el => el.style.display = 'none');
+    document.getElementById('inventoryScreen').style.display = 'none';
   }
 
-  let selectedCards = new Set();
+  let selectedSet = new Set();
 
   function openInventory() {
     document.getElementById('inventoryScreen').style.display = 'flex';
@@ -637,71 +593,70 @@
   function renderInventory() {
     const grid = document.getElementById('inventoryGrid');
     grid.innerHTML = "";
-    selectedCards.clear();
-    updateSellUI();
+    selectedSet.clear();
+    updateSellInfo();
 
     if(myCards.length === 0) {
-      grid.innerHTML = "<div style='color:#666; text-align:center; padding:20px; grid-column:1/-1;'>カードを持っていません</div>";
+      grid.innerHTML = "<div style='color:#555; grid-column:1/-1; text-align:center; margin-top:50px;'>NO DATA</div>";
       return;
     }
 
     [...myCards].reverse().forEach(card => {
       const el = document.createElement('div');
-      el.className = `grid-card ${card.rarity}`;
-      el.dataset.id = card.uniqueId;
+      el.className = `card-item ${card.r}`;
+      // すでにアニメーション済みなのでopacity1
+      el.style.opacity = 1;
+      el.style.transform = 'scale(1)';
+      
       el.innerHTML = `
         <img src="${card.img}">
-        <div class="info">
-          ${card.point.toLocaleString()}pt
-        </div>
+        <div class="card-info">${card.pt.toLocaleString()}</div>
       `;
       
       el.onclick = () => {
-        if(selectedCards.has(card.uniqueId)) {
-          selectedCards.delete(card.uniqueId);
+        if(selectedSet.has(card.uid)) {
+          selectedSet.delete(card.uid);
           el.classList.remove('selected');
         } else {
-          selectedCards.add(card.uniqueId);
+          selectedSet.add(card.uid);
           el.classList.add('selected');
         }
-        updateSellUI();
+        updateSellInfo();
       };
       
       grid.appendChild(el);
     });
   }
 
-  function updateSellUI() {
-    const count = selectedCards.size;
-    let totalVal = 0;
-    
-    selectedCards.forEach(uid => {
-      const c = myCards.find(x => x.uniqueId === uid);
-      if(c) totalVal += c.point;
+  function updateSellInfo() {
+    const count = selectedSet.size;
+    let total = 0;
+    selectedSet.forEach(uid => {
+      const c = myCards.find(x => x.uid === uid);
+      if(c) total += c.pt;
     });
-
+    
     document.getElementById('sellCount').innerText = count;
-    document.getElementById('sellValue').innerText = totalVal.toLocaleString();
+    document.getElementById('sellValue').innerText = total.toLocaleString();
     document.getElementById('sellBtn').disabled = (count === 0);
   }
 
   function sellSelectedCards() {
-    if(selectedCards.size === 0) return;
-    if(!confirm(`${selectedCards.size}枚のカードを売却しますか？`)) return;
-
-    let sellTotal = 0;
+    if(selectedSet.size === 0) return;
+    if(!confirm("Sell selected cards?")) return;
+    
+    let total = 0;
     myCards = myCards.filter(c => {
-      if(selectedCards.has(c.uniqueId)) {
-        sellTotal += c.point;
-        return false; 
+      if(selectedSet.has(c.uid)) {
+        total += c.pt;
+        return false;
       }
       return true;
     });
-
-    userPoints += sellTotal;
+    
+    userPoints += total;
     updateUI();
     renderInventory();
-    alert(`${sellTotal.toLocaleString()} pt 獲得しました！`);
   }
 
 </script>
